@@ -1,5 +1,7 @@
 
 Rails.application.routes.draw do
+  get "offers/index"
+  get "offers/show"
   devise_for :users
 
   root to: "pages#home"
