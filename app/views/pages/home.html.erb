@@ -1,2 +1,102 @@
-<h1>Super page home</h1>
-<p>voici la demo de pr github</p>
+<div class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <h1>Find your next developer job</h1>
+
+    <p>Apply faster with AI generated cover letters</p>
+
+    <%= link_to "Browse Jobs", offers_path, class: "btn-primary" %>
+
+  </section>
+
+ <!-- PROFILE FORM -->
+  <section class="profile-form">
+
+    <h2>Create your profile</h2>
+
+    <%= form_with url: my_profile_path, method: :get, class: "form" do |f| %>
+
+      <div class="form-group">
+        <label>Job title</label>
+        <%= f.text_field :job_title, placeholder: "Ruby developer" %>
+      </div>
+
+      <div class="form-group">
+        <label>City</label>
+        <%= f.text_field :city, placeholder: "Paris" %>
+      </div>
+
+      <div class="form-group">
+        <label>Domain</label>
+        <%= f.text_field :domain, placeholder: "Web development" %>
+      </div>
+
+      <div class="form-group">
+        <label>Salary</label>
+        <%= f.number_field :salary, placeholder: "45000" %>
+      </div>
+
+      <div class="form-group">
+        <label>Upload CV</label>
+        <%= f.file_field :cv %>
+      </div>
+
+      <%= f.submit "Create profile", class: "btn-primary" %>
+
+    <% end %>
+
+  </section>
+
+<!-- JOB OFFERS -->
+  <section class="jobs">
+
+    <h2>Latest Job Offers</h2>
+
+    <% if @offers.present? %>
+
+      <% @offers.each do |offer| %>
+
+        <div class="job-card">
+
+          <h3><%= offer.title %></h3>
+
+          <p><%= truncate(offer.description, length: 120) %></p>
+
+          <div class="job-actions">
+
+            <%= link_to "View offer",
+              offer_path(offer),
+              class: "btn" %>
+
+            <% if user_signed_in? %>
+
+              <%= button_to "Apply",
+                apply_offer_path(offer),
+                method: :post,
+                class: "btn-apply" %>
+
+            <% else %>
+
+              <%= link_to "Login to apply",
+                new_user_session_path,
+                class: "btn" %>
+
+            <% end %>
+
+          </div>
+
+        </div>
+
+      <% end %>
+
+    <% else %>
+
+      <p>No jobs available yet.</p>
+
+    <% end %>
+
+  </section>
+
+</div>
