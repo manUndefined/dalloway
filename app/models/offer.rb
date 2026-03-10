@@ -5,7 +5,7 @@ class Offer < ApplicationRecord
   validates :title, presence: true, length: { minimum: 3 }
   validates :url, presence: true
   validates :description, presence: true, length: { minimum: 10 }
-  validates :encrypted_password, presence: true
+  # validates :encrypted_password, presence: true
 
-  validates :cv, presence: true
+  # validates :cv, presence: true
 end
