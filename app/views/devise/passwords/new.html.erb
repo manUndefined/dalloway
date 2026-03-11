@@ -1,18 +1,36 @@
-<h2>Forgot your password?</h2>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">
+        <i class="fa-solid fa-key"></i>
+      </div>
+      <h1 class="auth-title">Mot de passe oublié ?</h1>
+      <p class="auth-subtitle">Entrez votre email, nous vous enverrons un lien de réinitialisation</p>
+    </div>
 
-<%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= f.error_notification %>
+    <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+      <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" } %>
+      <div class="auth-form">
+        <div class="auth-field">
+          <i class="fa-solid fa-envelope auth-field-icon"></i>
+          <%= f.input :email,
+                      required: true,
+                      autofocus: true,
+                      label: false,
+                      placeholder: "Adresse email",
+                      input_html: { autocomplete: "email", class: "auth-input" } %>
+        </div>
+
+        <%= f.button :submit, "Envoyer le lien", class: "auth-btn" %>
+      </div>
+    <% end %>
+
+    <div class="auth-footer">
+      <p>
+        <i class="fa-solid fa-arrow-left" style="font-size: 12px;"></i>
+        <%= link_to "Retour à la connexion", new_session_path(resource_name), class: "auth-link" %>
+      </p>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Send me password reset instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>

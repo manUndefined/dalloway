@@ -1,25 +1,54 @@
-<h2>Sign up</h2>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">
+        <i class="fa-solid fa-user-plus"></i>
+      </div>
+      <h1 class="auth-title">Créer un compte</h1>
+      <p class="auth-subtitle">Rejoignez InterviewCoach et préparez vos entretiens avec l'IA</p>
+    </div>
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= f.error_notification %>
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" } %>
-    <%= f.input :password,
-                required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation,
-                required: true,
-                input_html: { autocomplete: "new-password" } %>
+      <div class="auth-form">
+        <div class="auth-field">
+          <i class="fa-solid fa-envelope auth-field-icon"></i>
+          <%= f.input :email,
+                      required: true,
+                      autofocus: true,
+                      label: false,
+                      placeholder: "Adresse email",
+                      input_html: { autocomplete: "email", class: "auth-input" } %>
+        </div>
+
+        <div class="auth-field">
+          <i class="fa-solid fa-lock auth-field-icon"></i>
+          <%= f.input :password,
+                      required: true,
+                      label: false,
+                      placeholder: "Mot de passe (6 caractères min.)",
+                      hint: false,
+                      input_html: { autocomplete: "new-password", class: "auth-input" } %>
+        </div>
+
+        <div class="auth-field">
+          <i class="fa-solid fa-shield-halved auth-field-icon"></i>
+          <%= f.input :password_confirmation,
+                      required: true,
+                      label: false,
+                      placeholder: "Confirmer le mot de passe",
+                      input_html: { autocomplete: "new-password", class: "auth-input" } %>
+        </div>
+
+        <%= f.button :submit, "Créer mon compte", class: "auth-btn" %>
+      </div>
+    <% end %>
+
+    <div class="auth-footer">
+      <p>Déjà inscrit ?
+        <%= link_to "Se connecter", new_session_path(resource_name), class: "auth-link" %>
+      </p>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
