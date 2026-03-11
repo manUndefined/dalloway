@@ -457,6 +457,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  nokogiri
   pg (~> 1.1)
   puma (>= 5.0)
   rails (~> 8.1.2)
