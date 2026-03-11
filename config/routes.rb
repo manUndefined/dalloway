@@ -8,7 +8,11 @@ Rails.application.routes.draw do
 
   get :my_profile, to: "users#my_profile"
 
-  resources :offers, only: [:index, :show] do
+  resources :offers, only: [:index, :show, :create] do
+    collection do
+      post :scrape
+    end
+
     resources :chats, only: [:create]
 
     member do

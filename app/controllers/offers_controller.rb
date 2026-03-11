@@ -1,39 +1,27 @@
 class OffersController < ApplicationController
-  def index
-    @offers = Offer.all
+  skip_before_action :authenticate_user!, only: [:scrape]
+  skip_before_action :verify_authenticity_token, only: [:scrape]
 
+  def create
+    @offer = Offer.new(offer_params)
+    if @offer.save
+      redirect_to root_path, notice: "Offre ajoutée avec succès"
+    else
+      redirect_to root_path, alert: "Erreur : #{@offer.errors.full_messages.join(', ')}"
+    end
   end
 
-  def show
-    @offer = Offer.find(params[:id])
+  def scrape
+    url = params[:url]
+    data = OfferScraper.call(url)
+    render json: data
+  rescue StandardError => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
-  def generate_letter
-  @offer = Offer.find(params[:id])
+  private
 
-  name = params[:name]
-  skills = params[:skills]
-  experience = params[:experience]
-
-  @letter = "
-  Objet : Candidature pour le poste #{@offer.title}
-
-  Madame, Monsieur,
-
-  Je me permets de vous adresser ma candidature pour le poste de #{@offer.title}.
-
-  Développeur passionné, je possède des compétences en #{skills}. 
-  #{experience}
-
-  Votre offre a particulièrement retenu mon attention et je serais très motivé à rejoindre votre équipe.
-
-  Je reste à votre disposition pour un entretien.
-
-  Cordialement,
-
-  #{name}
-  "
-
-  render :show
-end
+  def offer_params
+    params.require(:offer).permit(:url, :title, :description, :city, :domain, :salary)
+  end
 end

@@ -1,102 +1,133 @@
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <span class="hero-badge">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Propulsé par l'IA
+      </span>
+      <h1 class="hero-title">Décrochez votre prochain job<br><span class="hero-highlight">en quelques clics</span></h1>
+      <p class="hero-desc">Entraînez-vous aux entretiens avec une IA qui s'adapte à votre CV et à l'offre ciblée.</p>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER FORM -->
 <div class="container">
-
-  <!-- HERO -->
-  <section class="hero">
-
-    <h1>Find your next developer job</h1>
-
-    <p>Apply faster with AI generated cover letters</p>
-
-    <%= link_to "Browse Jobs", offers_path, class: "btn-primary" %>
-
-  </section>
-
- <!-- PROFILE FORM -->
-  <section class="profile-form">
-
-    <h2>Create your profile</h2>
-
-    <%= form_with url: my_profile_path, method: :get, class: "form" do |f| %>
-
-      <div class="form-group">
-        <label>Job title</label>
-        <%= f.text_field :job_title, placeholder: "Ruby developer" %>
+  <section class="offer-form-card">
+    <div class="offer-form-header">
+      <div class="offer-form-icon">
+        <i class="fa-solid fa-plus"></i>
       </div>
-
-      <div class="form-group">
-        <label>City</label>
-        <%= f.text_field :city, placeholder: "Paris" %>
+      <div>
+        <h2 class="offer-form-title">Nouvelle offre</h2>
+        <p class="offer-form-subtitle">Renseignez les détails de l'offre puis lancez un entretien avec l'IA</p>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label>Domain</label>
-        <%= f.text_field :domain, placeholder: "Web development" %>
-      </div>
-
-      <div class="form-group">
-        <label>Salary</label>
-        <%= f.number_field :salary, placeholder: "45000" %>
-      </div>
-
-      <div class="form-group">
-        <label>Upload CV</label>
-        <%= f.file_field :cv %>
-      </div>
-
-      <%= f.submit "Create profile", class: "btn-primary" %>
-
-    <% end %>
-
-  </section>
-
-<!-- JOB OFFERS -->
-  <section class="jobs">
-
-    <h2>Latest Job Offers</h2>
-
-    <% if @offers.present? %>
-
-      <% @offers.each do |offer| %>
-
-        <div class="job-card">
-
-          <h3><%= offer.title %></h3>
-
-          <p><%= truncate(offer.description, length: 120) %></p>
-
-          <div class="job-actions">
-
-            <%= link_to "View offer",
-              offer_path(offer),
-              class: "btn" %>
-
-            <% if user_signed_in? %>
-
-              <%= button_to "Apply",
-                apply_offer_path(offer),
-                method: :post,
-                class: "btn-apply" %>
-
-            <% else %>
-
-              <%= link_to "Login to apply",
-                new_user_session_path,
-                class: "btn" %>
-
-            <% end %>
-
+    <%= form_with model: Offer.new, url: offers_path, method: :post, class: "offer-form", data: { controller: "scraper" } do |f| %>
+      <div class="offer-form-grid">
+        <div class="offer-field offer-field-full">
+          <label class="offer-label">
+            <i class="fa-solid fa-link"></i> URL de l'offre
+          </label>
+          <div class="offer-url-wrap">
+            <%= f.text_field :url, placeholder: "https://fr.indeed.com/viewjob?jk=...", class: "offer-input", data: { scraper_target: "url", action: "paste->scraper#paste input->scraper#inputChanged" } %>
+            <div class="offer-url-spinner" data-scraper-target="spinner">
+              <i class="fa-solid fa-spinner fa-spin"></i>
+            </div>
           </div>
-
         </div>
 
-      <% end %>
+        <div class="offer-field">
+          <label class="offer-label">
+            <i class="fa-solid fa-briefcase"></i> Poste
+          </label>
+          <%= f.text_field :title, placeholder: "Développeur Ruby on Rails", class: "offer-input", data: { scraper_target: "title" } %>
+        </div>
 
-    <% else %>
+        <div class="offer-field">
+          <label class="offer-label">
+            <i class="fa-solid fa-location-dot"></i> Ville
+          </label>
+          <%= f.text_field :city, placeholder: "Paris", class: "offer-input", data: { scraper_target: "city" } %>
+        </div>
 
-      <p>No jobs available yet.</p>
+        <div class="offer-field">
+          <label class="offer-label">
+            <i class="fa-solid fa-layer-group"></i> Domaine
+          </label>
+          <%= f.text_field :domain, placeholder: "Web development", class: "offer-input", data: { scraper_target: "domain" } %>
+        </div>
 
+        <div class="offer-field">
+          <label class="offer-label">
+            <i class="fa-solid fa-euro-sign"></i> Salaire
+          </label>
+          <%= f.number_field :salary, placeholder: "45000", class: "offer-input", data: { scraper_target: "salary" } %>
+        </div>
+
+        <div class="offer-field offer-field-full">
+          <label class="offer-label">
+            <i class="fa-solid fa-align-left"></i> Description
+          </label>
+          <%= f.text_area :description, placeholder: "Description du poste...", class: "offer-input offer-textarea", rows: 3 %>
+        </div>
+      </div>
+
+      <div class="offer-form-actions">
+        <%= f.submit "Ajouter l'offre", class: "offer-btn offer-btn-secondary" %>
+        <%= f.submit "Lancer la session", class: "offer-btn offer-btn-primary" %>
+      </div>
     <% end %>
-
   </section>
 
+  <!-- JOB OFFERS -->
+  <section class="jobs-section">
+    <div class="jobs-header">
+      <h2 class="jobs-title">Offres récentes</h2>
+      <p class="jobs-subtitle">Vos dernières offres enregistrées</p>
+    </div>
+
+    <% if @offers.present? %>
+      <div class="jobs-grid">
+        <% @offers.each do |offer| %>
+          <div class="job-card">
+            <div class="job-card-top">
+              <div class="job-card-icon">
+                <i class="fa-solid fa-briefcase"></i>
+              </div>
+              <h3 class="job-card-title"><%= offer.title %></h3>
+              <p class="job-card-desc"><%= truncate(offer.description, length: 120) %></p>
+            </div>
+            <div class="job-card-actions">
+              <%= link_to offer_path(offer), class: "job-btn job-btn-outline" do %>
+                <i class="fa-solid fa-eye"></i> Voir
+              <% end %>
+              <% if user_signed_in? %>
+                <%= button_to apply_offer_path(offer), method: :post, class: "job-btn job-btn-apply" do %>
+                  <i class="fa-solid fa-paper-plane"></i> Postuler
+                <% end %>
+              <% else %>
+                <%= link_to new_user_session_path, class: "job-btn job-btn-outline" do %>
+                  <i class="fa-solid fa-right-to-bracket"></i> Connexion
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="jobs-empty">
+        <div class="jobs-empty-icon">
+          <i class="fa-solid fa-inbox"></i>
+        </div>
+        <p>Aucune offre pour le moment.</p>
+        <span>Ajoutez votre première offre ci-dessus pour commencer.</span>
+      </div>
+    <% end %>
+  </section>
 </div>

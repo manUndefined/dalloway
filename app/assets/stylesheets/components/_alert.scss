@@ -1,6 +1,119 @@
-.alert {
+// ==========================================
+// FLASH TOASTS
+// ==========================================
+
+.flash-toast {
   position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 1000;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+  min-width: 300px;
+  max-width: 440px;
+  overflow: hidden;
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+}
+
+.flash-toast.flash-visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.flash-toast.flash-exit {
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 0.35s ease-in, opacity 0.25s;
+}
+
+// Icon
+.flash-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+.flash-toast-info .flash-icon {
+  background: rgba($green, 0.1);
+  color: $green;
+}
+
+.flash-toast-warning .flash-icon {
+  background: rgba($orange, 0.1);
+  color: $orange;
+}
+
+// Text
+.flash-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  flex: 1;
+}
+
+// Close button
+.flash-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+
+  &:hover {
+    background: #f3f4f6;
+    color: #4b5563;
+  }
+}
+
+// Progress bar
+.flash-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  border-radius: 0 0 14px 14px;
+  animation: flashProgress 4s linear forwards;
+}
+
+.flash-toast-info .flash-progress {
+  background: linear-gradient(90deg, $green, lighten($green, 12%));
+}
+
+.flash-toast-warning .flash-progress {
+  background: linear-gradient(90deg, $orange, $yellow);
+}
+
+@keyframes flashProgress {
+  0% { width: 100%; }
+  100% { width: 0%; }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .flash-toast {
+    left: 16px;
+    right: 16px;
+    min-width: auto;
+    bottom: 16px;
+  }
 }

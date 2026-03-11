@@ -1,12 +1,197 @@
-.navbar-lewagon {
-  justify-content: space-between;
-  background: white;
+.navbar-dalloway {
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 0;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
 }
 
-.navbar-lewagon .navbar-collapse {
-  flex-grow: 0;
+// Brand
+.navbar-dalloway .navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.85;
+  }
 }
 
-.navbar-lewagon .navbar-brand img {
-  width: 40px;
+.navbar-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: $primary;
+  color: #fff;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+}
+
+.navbar-brand-text {
+  font-weight: 700;
+  font-size: 20px;
+  color: #1f2937;
+  letter-spacing: -0.3px;
+}
+
+// Toggler
+.navbar-dalloway .navbar-toggler {
+  border: none;
+  padding: 6px 10px;
+  color: #6b7280;
+  font-size: 20px;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+// Nav links
+.navbar-dalloway .nav-link {
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px !important;
+  border-radius: 8px;
+  transition: color 0.15s, background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  i {
+    font-size: 13px;
+  }
+
+  &:hover {
+    color: $primary;
+    background: rgba($primary, 0.06);
+  }
+}
+
+// Signup button (visitors)
+.nav-btn-signup {
+  display: inline-block;
+  padding: 8px 20px;
+  background: $primary;
+  color: #fff !important;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  margin-left: 8px;
+  transition: background 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    background: darken($primary, 8%);
+    box-shadow: 0 2px 8px rgba($primary, 0.25);
+    color: #fff;
+  }
+}
+
+// Avatar circle
+.nav-avatar-link {
+  padding: 4px 8px !important;
+}
+
+.nav-avatar-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary, darken($primary, 12%));
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  transition: box-shadow 0.2s;
+}
+
+.nav-avatar-link:hover .nav-avatar-circle {
+  box-shadow: 0 0 0 3px rgba($primary, 0.15);
+}
+
+// Dropdown menu
+.nav-dropdown {
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  min-width: 220px;
+  margin-top: 8px;
+}
+
+.nav-dropdown-header {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+
+  strong {
+    font-size: 14px;
+    color: #1f2937;
+  }
+
+  span {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 2px;
+  }
+}
+
+.nav-dropdown-item {
+  font-size: 14px;
+  padding: 10px 16px;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.12s;
+
+  i {
+    width: 16px;
+    text-align: center;
+    color: #9ca3af;
+  }
+
+  &:hover {
+    background: #f9fafb;
+  }
+}
+
+.nav-dropdown-logout {
+  color: #ef4444;
+
+  i {
+    color: #ef4444;
+  }
+
+  &:hover {
+    background: #fef2f2;
+  }
+}
+
+// Responsive
+@media (max-width: 767px) {
+  .navbar-dalloway .navbar-collapse {
+    padding-top: 16px;
+  }
+
+  .navbar-dalloway .nav-link {
+    padding: 10px 12px !important;
+  }
+
+  .nav-btn-signup {
+    margin-left: 0;
+    margin-top: 8px;
+    text-align: center;
+    display: block;
+  }
 }

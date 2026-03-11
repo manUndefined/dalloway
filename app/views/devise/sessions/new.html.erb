@@ -1,20 +1,52 @@
-<h2>Log in</h2>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1 class="auth-title">Dalloway</h1>
+      <p class="auth-subtitle">Connectez-vous à votre compte</p>
+    </div>
 
-<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: false,
-                autofocus: true,
-                input_html: { autocomplete: "email" } %>
-    <%= f.input :password,
-                required: false,
-                input_html: { autocomplete: "current-password" } %>
-    <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+    <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class="auth-form">
+        <div class="auth-field">
+          <i class="fa-solid fa-envelope auth-field-icon"></i>
+          <%= f.input :email,
+                      required: false,
+                      autofocus: true,
+                      label: false,
+                      placeholder: "Adresse email",
+                      input_html: { autocomplete: "email", class: "auth-input" } %>
+        </div>
+
+        <div class="auth-field">
+          <i class="fa-solid fa-lock auth-field-icon"></i>
+          <%= f.input :password,
+                      required: false,
+                      label: false,
+                      placeholder: "Mot de passe",
+                      input_html: { autocomplete: "current-password", class: "auth-input" } %>
+        </div>
+
+        <div class="auth-options">
+          <% if devise_mapping.rememberable? %>
+            <label class="auth-remember">
+              <%= f.input :remember_me, as: :boolean, label: false, wrapper: false, input_html: { class: "auth-checkbox" } %>
+              <span>Se souvenir de moi</span>
+            </label>
+          <% end %>
+
+          <%- if devise_mapping.recoverable? %>
+            <%= link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "auth-forgot" %>
+          <% end %>
+        </div>
+
+        <%= f.button :submit, "Se connecter", class: "auth-btn" %>
+      </div>
+    <% end %>
+
+    <div class="auth-footer">
+      <p>Pas encore de compte ?
+        <%= link_to "Créer un compte", new_registration_path(resource_name), class: "auth-link" %>
+      </p>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Log in" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>

@@ -1,14 +1,56 @@
-<% if notice %>
-  <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
-    <%= notice %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+<% if notice.present? && notice.include?("Signed in") %>
+  <div class="welcome-overlay" data-controller="welcome">
+    <div class="welcome-particles" data-welcome-target="particles"></div>
+    <div class="welcome-content" data-welcome-target="content">
+      <div class="welcome-avatar-burst">
+        <div class="welcome-ring welcome-ring-1"></div>
+        <div class="welcome-ring welcome-ring-2"></div>
+        <div class="welcome-ring welcome-ring-3"></div>
+        <div class="welcome-avatar-big">
+          <%= current_user.first_name&.first&.upcase || "U" %>
+        </div>
+      </div>
+      <h1 class="welcome-title">
+        Bienvenue<%= current_user.first_name.present? ? ", #{current_user.first_name}" : "" %> !
+      </h1>
+      <p class="welcome-tagline">Prêt à décrocher votre prochain job ?</p>
+      <div class="welcome-stats">
+        <div class="welcome-stat">
+          <i class="fa-solid fa-briefcase"></i>
+          <span>Offres disponibles</span>
+        </div>
+        <div class="welcome-stat">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Cover letters IA</span>
+        </div>
+        <div class="welcome-stat">
+          <i class="fa-solid fa-rocket"></i>
+          <span>Postulez en 1 clic</span>
+        </div>
+      </div>
+    </div>
+  </div>
+<% elsif notice.present? %>
+  <div class="flash-toast flash-toast-info" data-controller="flash">
+    <div class="flash-icon">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <span class="flash-text"><%= notice %></span>
+    <button type="button" class="flash-close" data-action="click->flash#dismiss">
+      <i class="fa-solid fa-xmark"></i>
     </button>
+    <div class="flash-progress" data-flash-target="progress"></div>
   </div>
 <% end %>
 <% if alert %>
-  <div class="alert alert-warning alert-dismissible fade show m-1" role="alert">
-    <%= alert %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+  <div class="flash-toast flash-toast-warning" data-controller="flash">
+    <div class="flash-icon">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+    <span class="flash-text"><%= alert %></span>
+    <button type="button" class="flash-close" data-action="click->flash#dismiss">
+      <i class="fa-solid fa-xmark"></i>
     </button>
+    <div class="flash-progress" data-flash-target="progress"></div>
   </div>
 <% end %>
