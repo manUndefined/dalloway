@@ -10,3 +10,12 @@
 // Your CSS partials
 @import "components/index";
 @import "pages/index";
+@import "components/offers";
+
+/* Arrière-plan de la page */
+
+.offer-page {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}

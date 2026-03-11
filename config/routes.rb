@@ -1,7 +1,5 @@
 
 Rails.application.routes.draw do
-  get "offers/index"
-  get "offers/show"
   devise_for :users
 
   root to: "pages#home"
@@ -14,12 +12,16 @@ Rails.application.routes.draw do
     end
 
     resources :chats, only: [:create]
+    resources :cover_letters, only: [:create]
+
 
     member do
       post :apply
-      post :generate_cover_letter
     end
   end
+
+  resources :cover_letters, only: [:update]
+
 	
   resources :chats, only: [:index, :show] do
     resources :messages, only: [:create]

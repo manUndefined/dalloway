@@ -10,12 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_220949) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_11_114100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "applications", force: :cascade do |t|
-    t.string "cover_letter"
     t.datetime "created_at", null: false
     t.bigint "offer_id", null: false
     t.string "status"
@@ -33,6 +32,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_220949) do
     t.bigint "user_id", null: false
     t.index ["offer_id"], name: "index_chats_on_offer_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
+  end
+
+  create_table "cover_letters", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.string "details"
+    t.bigint "offer_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["offer_id"], name: "index_cover_letters_on_offer_id"
+    t.index ["user_id"], name: "index_cover_letters_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -73,5 +83,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_220949) do
   add_foreign_key "applications", "users"
   add_foreign_key "chats", "offers"
   add_foreign_key "chats", "users"
+  add_foreign_key "cover_letters", "offers"
+  add_foreign_key "cover_letters", "users"
   add_foreign_key "messages", "chats"
 end
