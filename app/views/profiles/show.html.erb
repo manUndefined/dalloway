@@ -1,0 +1,18 @@
+<div class="container py-5">
+  <h1 class="mb-4">Mon profil</h1>
+
+  <div class="card p-4 shadow-sm">
+    <p><strong>Prénom :</strong> <%= @user.first_name.presence || "Non renseigné" %></p>
+    <p><strong>Nom :</strong> <%= @user.last_name.presence || "Non renseigné" %></p>
+    <p><strong>Email :</strong> <%= @user.email %></p>
+    <p><strong>Ville :</strong> <%= @user.city.presence || "Non renseignée" %></p>
+    <p><strong>Domaine :</strong> <%= @user.domain.presence || "Non renseigné" %></p>
+    <p><strong>Type de job :</strong> <%= @user.job_type.presence || "Non renseigné" %></p>
+    <p><strong>Niveau d'expérience :</strong> <%= @user.experience_level.presence || "Non renseigné" %></p>
+    <p><strong>Salaire visé :</strong> <%= @user.salary.presence || "Non renseigné" %></p>
+
+    <div class="mt-3">
+      <%= link_to "Modifier mon profil", edit_profile_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+</div>

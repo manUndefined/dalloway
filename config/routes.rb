@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   root to: "pages#home"
 
-  get :my_profile, to: "users#my_profile"
+  resource :profile, only: [:show, :edit, :update]
 
   resources :offers, only: [:index, :show, :create] do
     collection do
