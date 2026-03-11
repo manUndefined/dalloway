@@ -28,7 +28,9 @@ class ProfilesController < ApplicationController
       :domain,
       :job_type,
       :experience_level,
-      :salary
+      :salary,
+      :photo,
+      :cv
     )
   end
 end
