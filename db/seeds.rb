@@ -8,12 +8,26 @@ User.destroy_all
 puts "Setting up users..."
 users = User.all.to_a
 if users.empty?
-  users = [User.create!(
-    email: "laye@dalloway.com",
-    password: "password",
-    first_name: "Laye",
-    last_name: "Thiam"
-  )]
+  users = [
+    User.create!(
+      email: "laye@dalloway.com",
+      password: "dallowaypassword",
+      first_name: "Laye",
+      last_name: "Thiam"
+    ),
+    User.create!(
+      email: "manu@dalloway.com",
+      password: "password",
+      first_name: "Manu",
+      last_name: "toto"
+    ),
+    User.create!(
+      email: "mathilde@dalloway.com",
+      password: "password",
+      first_name: "Mathilde",
+      last_name: "tata"
+    )
+  ]
 end
 
 puts "Creating offers..."
@@ -113,19 +127,18 @@ end
 
 puts "Creating applications..."
 
-application1 = Application.create!(
-  user_id: user1.id,
-  offer_id: offer1.id,
+Application.create!(
+  user: User.first,
+  offer: Offer.first,
   cover_letter: "I would love to join your team!",
   status: "pending"
 )
 
-application2 = Application.create!(
-  user_id: user2.id,
-  offer_id: offer2.id,
+Application.create!(
+  user: User.last,
+  offer: Offer.last,
   cover_letter: "My experience fits perfectly.",
   status: "accepted"
 )
 
 puts "Seeds done! #{User.count} users, #{Offer.count} offers, #{Chat.count} chats, #{Message.count} messages."
-
