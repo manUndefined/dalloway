@@ -31,11 +31,13 @@ export default class extends Controller {
     this.showSpinner()
 
     try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
       const response = await fetch("/offers/scrape", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
+          "Accept": "application/json",
+          "X-CSRF-Token": csrfToken
         },
         body: JSON.stringify({ url: url })
       })

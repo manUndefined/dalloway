@@ -147,21 +147,24 @@ class OfferScraper
     end
 
     def extract_title(doc)
-      # HelloWork specific
-      hw_title = doc.at_css("[data-cy=offerTitle] p, h1[data-cy]")&.text&.strip
+      # HelloWork detail page: data-cy=jobTitle inside h1
+      hw_job = doc.at_css("[data-cy=jobTitle]")&.text&.strip
+      return hw_job if hw_job.present?
+
+      # HelloWork search card: p inside offerTitle link
+      hw_title = doc.at_css("[data-cy=offerTitle] p.tw-typo-l")&.text&.strip
       return hw_title if hw_title.present?
 
-      doc.at_css('meta[property="og:title"]')&.[]("content")&.split(" - ")&.first&.strip ||
-        doc.at_css("h1")&.text&.strip ||
+      # Generic: og:title (split on " - " to remove site name)
+      og = doc.at_css('meta[property="og:title"]')&.[]("content")
+      return og.split(" - ").first.strip if og.present?
+
+      doc.at_css("h1")&.text&.strip ||
         doc.title&.strip
     end
 
     def extract_description(doc)
-      # HelloWork: job description section
-      hw_desc = doc.at_css("[data-cy=offerDescription], [class*='offer-description'], [class*='jobDescription']")
-      return hw_desc.text.strip.truncate(1000) if hw_desc.present?
-
-      # Try structured data
+      # HelloWork: og:description is clean and useful
       og = doc.at_css('meta[property="og:description"]')&.[]("content")
       return og if og.present? && og.length > 20
 
@@ -182,7 +185,7 @@ class OfferScraper
 
       selectors = [
         '[class*="jobLocation"]', '[class*="job-location"]',
-        '[data-testid*="location"]', '[class*="location" i]',
+        '[data-testid*="location"]', '[class*="location"]', '[class*="Location"]',
         '[class*="lieu"]', '[itemprop="jobLocation"]',
         '[itemprop="addressLocality"]'
       ]
@@ -233,9 +236,9 @@ class OfferScraper
     def extract_salary(doc)
       # Try structured elements
       selectors = [
-        '[class*="salary" i]', '[class*="Salary"]',
-        '[id*="salary" i]', '[class*="compensation" i]',
-        '[class*="remuneration" i]', '[itemprop="baseSalary"]'
+        '[class*="salary"]', '[class*="Salary"]',
+        '[id*="salary"]', '[class*="compensation"]', '[class*="Compensation"]',
+        '[class*="remuneration"]', '[class*="Remuneration"]', '[itemprop="baseSalary"]'
       ]
       selectors.each do |sel|
         el = doc.at_css(sel)
@@ -247,7 +250,8 @@ class OfferScraper
 
       # Try regex on full text (normalize Unicode spaces)
       text = doc.text.gsub(/[\u00A0\u202F\u2007\u2009]/, " ")
-      if (m = text.match(/(\d[\d\s]+)\s*[-–]\s*(\d[\d\s]+)\s*€\s*\/\s*an/))
+      # Range: "38 000 - 43 000 €" or "38 000 - 43 000 € / an"
+      if (m = text.match(/(\d[\d\s]+)\s*[-–]\s*(\d[\d\s]+)\s*€/))
         avg = (m[1].gsub(/\s/, "").to_i + m[2].gsub(/\s/, "").to_i) / 2
         return avg if avg > 10_000
       end
