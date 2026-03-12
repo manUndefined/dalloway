@@ -77,6 +77,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_140010) do
     t.datetime "created_at", null: false
     t.string "description"
     t.string "domain"
+    t.string "experience_level"
+    t.string "job_type"
     t.integer "salary"
     t.string "title"
     t.datetime "updated_at", null: false
@@ -93,6 +95,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_140010) do
     t.string "first_name"
     t.string "job_type"
     t.string "last_name"
+    t.string "preferred_city"
+    t.string "preferred_experience_level"
+    t.string "preferred_job_type"
+    t.integer "preferred_salary"
+    t.string "preferred_sector"
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
