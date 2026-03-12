@@ -1,7 +1,9 @@
-puts "Cleaning chats & offers..."
+puts "Cleaning database..."
 Message.destroy_all
 Chat.destroy_all
 Offer.destroy_all
+Application.destroy_all
+User.destroy_all
 
 puts "Setting up users..."
 users = User.all.to_a
@@ -108,4 +110,22 @@ users.each do |user|
   end
 end
 
+
+puts "Creating applications..."
+
+application1 = Application.create!(
+  user_id: user1.id,
+  offer_id: offer1.id,
+  cover_letter: "I would love to join your team!",
+  status: "pending"
+)
+
+application2 = Application.create!(
+  user_id: user2.id,
+  offer_id: offer2.id,
+  cover_letter: "My experience fits perfectly.",
+  status: "accepted"
+)
+
 puts "Seeds done! #{User.count} users, #{Offer.count} offers, #{Chat.count} chats, #{Message.count} messages."
+

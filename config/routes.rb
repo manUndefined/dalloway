@@ -1,10 +1,12 @@
 
 Rails.application.routes.draw do
+  get "offers/index"
+  get "offers/show"
   devise_for :users
 
   root to: "pages#home"
 
-  get :my_profile, to: "users#my_profile"
+  resource :profile, only: [:show, :edit, :update]
 
   resources :offers, only: [:index, :show, :create] do
     collection do
