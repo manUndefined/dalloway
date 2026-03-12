@@ -1,37 +1,108 @@
-<h1><%= @offer.title %></h1>
+<div class="main-content">
 
-<p><strong>Description :</strong></p>
-<p><%= @offer.description %></p>
+  <!-- HEADER ACTION -->
+  <div class="action-header" style="display:flex; justify-content:flex-end; margin-bottom:20px;">
+    <%= link_to "🎯 Nouvelle session d'entraînement",
+                "#",
+                class: "btn-training" %>
+  </div>
 
-<p><strong>URL :</strong> <%= link_to "Voir l'offre", @offer.url, target: "_blank" %></p>
 
-<p><strong>Créé le :</strong> <%= @offer.created_at.strftime("%d %B %Y") %></p>
+  <!-- CARD OFFRE -->
+  <div class="card">
 
+<<<<<<< offerpage
+    <h1><%= @offer.title %></h1>
+=======
 <%= link_to "Retour à la liste", root_path %>
+>>>>>>> main
 
-<hr>
+    <span class="label">Description</span>
+    <p><%= @offer.description %></p>
 
-<h2>Générer une lettre de motivation</h2>
+    <span class="label">Lien</span>
+    <%= link_to "Voir l'offre", @offer.url, target: "_blank" %>
 
-<%= form_with url: generate_cover_letter_offer_path(@offer), method: :post, local: true do |f| %>
+    <p class="date">
+      Créé le <%= @offer.created_at.strftime("%d %B %Y") %>
+    </p>
 
-  <div>
-    <%= label_tag :name, "Votre nom" %><br>
-    <%= text_field_tag :name %>
+    <br>
+
+    <%= link_to "← Retour à la liste", offers_path, class: "btn-secondary" %>
+
   </div>
 
-  <div>
-    <%= label_tag :skills, "Vos compétences principales" %><br>
-    <%= text_field_tag :skills %>
+
+  <!-- CARD LETTRE -->
+  <div class="card">
+
+    <h2>Générer une lettre de motivation</h2>
+
+    <% if @offer.cover_letters.any? %>
+
+      <%= form_with model: [@offer.cover_letters.last], local: true do |f| %>
+
+        <span class="label">Contenu</span>
+        <%= f.text_area :content %>
+
+        <span class="label">Des précisions</span>
+        <%= f.text_area :details %>
+
+        <br>
+
+        <%= f.submit "Mettre à jour la lettre de motivation", class: "btn-primary" %>
+
+      <% end %>
+
+
+      <br>
+
+      <%= form_with model: [@offer, @cover_letter], local: true do |f| %>
+        <%= f.submit "Regénérer la lettre", class: "btn-secondary" %>
+      <% end %>
+
+
+    <% else %>
+
+      <%= form_with model: [@offer, @cover_letter], local: true do |f| %>
+
+        <span class="label">Des précisions</span>
+        <%= f.text_area :details %>
+
+        <br>
+
+        <%= f.submit "Générer la lettre", class: "btn-primary" %>
+
+      <% end %>
+
+    <% end %>
+
+
+    <!-- LETTRE GÉNÉRÉE -->
+
+    <% if @letter.present? %>
+
+      <div class="generated-letter">
+        <%= simple_format(@letter) %>
+      </div>
+
+    <% end %>
+
+
+    <!-- BOUTON CANDIDATURE -->
+
+    <div style="margin-top:20px;">
+
+      <%= button_to "Candidater",
+                    apply_offer_path(@offer),
+                    method: :post,
+                    class: "btn-primary",
+                    data: { confirm: "Voulez-vous vraiment envoyer votre candidature ?" } %>
+
+    </div>
+
   </div>
 
-  <div>
-    <%= label_tag :experience, "Votre expérience" %><br>
-    <%= text_area_tag :experience %>
-  </div>
-
-  <br>
-
-  <%= submit_tag "Générer la lettre" %>
-
+</div>
 <% end %>
