@@ -16,9 +16,31 @@
 
     <%= link_to "Retour à la liste", root_path %>
 
+<div class="job-grid">
 
-    <span class="label">Description</span>
-    <p><%= @offer.description %></p>
+  <div class="job-item">
+    <span class="label">DESCRIPTION</span>
+    <div class="job-value">Développeur Web</div>
+  </div>
+
+  <div class="job-item">
+    <span class="label">LOCALISATION</span>
+    <div class="job-value">📍 Annecy - 74</div>
+  </div>
+
+  <div class="job-item">
+    <span class="label">RÉMUNÉRATION</span>
+    <div class="job-value">💰 40k€</div>
+  </div>
+
+  <div class="job-item">
+    <span class="label">TYPE DE JOB</span>
+    <div class="job-value">💼 CDI</div>
+  </div>
+
+</div>
+
+<div style="height: 30px;"></div>
 
     <span class="label">Lien</span>
     <%= link_to "Voir l'offre", @offer.url, target: "_blank" %>
@@ -97,7 +119,7 @@
       <%= button_to "Candidater",
                     apply_offer_path(@offer),
                     method: :post,
-                    class: "btn-primary",
+                    class: "btn-action",
                     data: { confirm: "Voulez-vous vraiment envoyer votre candidature ?" } %>
 
     </div>
