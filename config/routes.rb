@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :offers, only: [:index, :show, :create] do
     collection do
       post :scrape
+      post :import
     end
 
     resources :chats, only: [:create]

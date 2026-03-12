@@ -1,0 +1,55 @@
+<div class="container">
+  <section class="history-section">
+    <div class="history-header">
+      <div class="history-header-text">
+        <h1 class="history-title">Historique des entretiens</h1>
+        <p class="history-subtitle"><%= @chats.size %> session<%= @chats.size > 1 ? "s" : "" %> d'entraînement</p>
+      </div>
+    </div>
+
+    <% if @chats.present? %>
+      <div class="history-list">
+        <% @chats.each do |chat| %>
+          <%= link_to chat_path(chat), class: "history-card" do %>
+            <div class="history-card-left">
+              <div class="history-card-icon">
+                <i class="fa-solid fa-comments"></i>
+              </div>
+              <div class="history-card-info">
+                <h3 class="history-card-title"><%= chat.title %></h3>
+                <p class="history-card-offer">
+                  <i class="fa-solid fa-briefcase"></i> <%= chat.offer.title %>
+                  <% if chat.offer.city.present? %>
+                    <span class="history-card-sep">&bull;</span> <%= chat.offer.city %>
+                  <% end %>
+                </p>
+                <div class="history-card-meta">
+                  <span><i class="fa-regular fa-message"></i> <%= chat.messages.size %> messages</span>
+                  <span><i class="fa-regular fa-clock"></i> <%= time_ago_in_words(chat.created_at) %></span>
+                </div>
+              </div>
+            </div>
+            <div class="history-card-right">
+              <% last_msg = chat.messages.last %>
+              <% if last_msg %>
+                <p class="history-card-preview"><%= truncate(last_msg.content, length: 80) %></p>
+              <% end %>
+              <span class="history-card-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="history-empty">
+        <div class="history-empty-icon">
+          <i class="fa-solid fa-comments"></i>
+        </div>
+        <p>Aucun entretien pour le moment</p>
+        <span>Lancez votre premier entretien depuis une offre d'emploi</span>
+        <%= link_to root_path, class: "history-empty-btn" do %>
+          <i class="fa-solid fa-arrow-left"></i> Voir les offres
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+</div>

@@ -1,0 +1,41 @@
+<div class="container">
+  <section class="chat-section">
+    <div class="chat-header">
+      <%= link_to chats_path, class: "chat-back" do %>
+        <i class="fa-solid fa-arrow-left"></i> Historique
+      <% end %>
+      <div class="chat-header-info">
+        <h1 class="chat-header-title"><%= @chat.title %></h1>
+        <p class="chat-header-offer">
+          <i class="fa-solid fa-briefcase"></i> <%= @chat.offer.title %>
+          <% if @chat.offer.city.present? %>
+            &bull; <%= @chat.offer.city %>
+          <% end %>
+          &bull; <%= time_ago_in_words(@chat.created_at) %>
+        </p>
+      </div>
+    </div>
+
+    <div class="chat-messages">
+      <% @chat.messages.order(:created_at).each do |message| %>
+        <div class="chat-bubble chat-bubble-<%= message.role %>">
+          <div class="chat-bubble-avatar">
+            <% if message.role == "assistant" %>
+              <i class="fa-solid fa-robot"></i>
+            <% else %>
+              <span><%= current_user.first_name&.first&.upcase || "U" %></span>
+            <% end %>
+          </div>
+          <div class="chat-bubble-content">
+            <div class="chat-bubble-role">
+              <%= message.role == "assistant" ? "Dalloway IA" : "Vous" %>
+            </div>
+            <div class="chat-bubble-text">
+              <%= simple_format(message.content) %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+</div>
