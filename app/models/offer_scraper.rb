@@ -140,35 +140,52 @@ class OfferScraper
         description: extract_description(doc),
         city: extract_city(doc),
         domain: extract_domain(doc),
-        salary: extract_salary(doc)
+        salary: extract_salary(doc),
+        job_type: extract_job_type(doc),
+        experience_level: extract_experience_level(doc)
       }
     end
 
     def extract_title(doc)
-      doc.at_css('meta[property="og:title"]')&.[]("content") ||
-        doc.at_css("h1")&.text&.strip ||
+      # HelloWork detail page: data-cy=jobTitle inside h1
+      hw_job = doc.at_css("[data-cy=jobTitle]")&.text&.strip
+      return hw_job if hw_job.present?
+
+      # HelloWork search card: p inside offerTitle link
+      hw_title = doc.at_css("[data-cy=offerTitle] p.tw-typo-l")&.text&.strip
+      return hw_title if hw_title.present?
+
+      # Generic: og:title (split on " - " to remove site name)
+      og = doc.at_css('meta[property="og:title"]')&.[]("content")
+      return og.split(" - ").first.strip if og.present?
+
+      doc.at_css("h1")&.text&.strip ||
         doc.title&.strip
     end
 
     def extract_description(doc)
-      # Try structured data first
+      # HelloWork: og:description is clean and useful
       og = doc.at_css('meta[property="og:description"]')&.[]("content")
       return og if og.present? && og.length > 20
 
       meta = doc.at_css('meta[name="description"]')&.[]("content")
       return meta if meta.present? && meta.length > 20
 
-      # Try job description containers
-      desc_el = doc.at_css('[class*="jobDescription"], [class*="job-description"], [id*="jobDescription"], [class*="description"]')
-      return desc_el.text.strip.truncate(500) if desc_el
+      # Try generic job description containers
+      desc_el = doc.at_css('[class*="job-description"], [id*="jobDescription"], [class*="description"]')
+      return desc_el.text.strip.truncate(1000) if desc_el
 
       doc.css("p").first(5).map { |p| p.text.strip }.reject(&:blank?).join(" ").truncate(500).presence
     end
 
     def extract_city(doc)
+      # HelloWork specific
+      hw_loc = doc.at_css("[data-cy=localisationCard], [data-cy=localisation]")&.text&.strip
+      return hw_loc if hw_loc.present?
+
       selectors = [
         '[class*="jobLocation"]', '[class*="job-location"]',
-        '[data-testid*="location"]', '[class*="location" i]',
+        '[data-testid*="location"]', '[class*="location"]', '[class*="Location"]',
         '[class*="lieu"]', '[itemprop="jobLocation"]',
         '[itemprop="addressLocality"]'
       ]
@@ -194,12 +211,34 @@ class OfferScraper
       nil
     end
 
+    def extract_job_type(doc)
+      # HelloWork specific
+      hw_contract = doc.at_css("[data-cy=contractCard], [data-cy=contract]")&.text&.strip
+      return hw_contract if hw_contract.present?
+
+      text = doc.text
+      return "CDI" if text.match?(/\bCDI\b/)
+      return "CDD" if text.match?(/\bCDD\b/)
+      return "Freelance" if text.match?(/\bFreelance\b/i)
+      return "Stage" if text.match?(/\bStage\b/i)
+      return "Alternance" if text.match?(/\bAlternance\b/i)
+      nil
+    end
+
+    def extract_experience_level(doc)
+      text = doc.text.downcase
+      return "Junior" if text.match?(/junior|débutant|0[\s-]+[23]\s*ans?|1[\s-]+[23]\s*ans?/)
+      return "Senior" if text.match?(/senior|expérimenté|[5-9]\+?\s*ans?|10\+?\s*ans?/)
+      return "Intermédiaire" if text.match?(/intermédiaire|confirmé|[3-5]\s*ans?/)
+      nil
+    end
+
     def extract_salary(doc)
       # Try structured elements
       selectors = [
-        '[class*="salary" i]', '[class*="Salary"]',
-        '[id*="salary" i]', '[class*="compensation" i]',
-        '[class*="remuneration" i]', '[itemprop="baseSalary"]'
+        '[class*="salary"]', '[class*="Salary"]',
+        '[id*="salary"]', '[class*="compensation"]', '[class*="Compensation"]',
+        '[class*="remuneration"]', '[class*="Remuneration"]', '[itemprop="baseSalary"]'
       ]
       selectors.each do |sel|
         el = doc.at_css(sel)
@@ -209,9 +248,13 @@ class OfferScraper
         end
       end
 
-      # Try regex on full text
-      text = doc.text
-      # Match patterns like "45 000 €", "45K€", "45k", "45000€"
+      # Try regex on full text (normalize Unicode spaces)
+      text = doc.text.gsub(/[\u00A0\u202F\u2007\u2009]/, " ")
+      # Range: "38 000 - 43 000 €" or "38 000 - 43 000 € / an"
+      if (m = text.match(/(\d[\d\s]+)\s*[-–]\s*(\d[\d\s]+)\s*€/))
+        avg = (m[1].gsub(/\s/, "").to_i + m[2].gsub(/\s/, "").to_i) / 2
+        return avg if avg > 10_000
+      end
       if (m = text.match(/(\d{2,3})\s*000\s*[€$]/))
         return m[1].to_i * 1000
       end

@@ -30,6 +30,13 @@
   gap: 12px;
 }
 
+.history-card-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .history-card {
   display: flex;
   align-items: center;
@@ -40,6 +47,8 @@
   padding: 20px 24px;
   text-decoration: none;
   color: inherit;
+  flex: 1;
+  min-width: 0;
   transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
 
   &:hover {
@@ -48,6 +57,30 @@
     border-color: rgba($primary, 0.2);
     color: inherit;
     text-decoration: none;
+  }
+}
+
+.history-delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(#ef4444, 0.12);
+  background: rgba(#ef4444, 0.06);
+  color: #ef4444;
+  font-size: 13px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &:hover {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(#ef4444, 0.3);
   }
 }
 
