@@ -1,6 +1,6 @@
 class Offer < ApplicationRecord
-  has_many :applications
-  has_many :chats
+  has_many :applications, dependent: :destroy
+  has_many :chats, dependent: :destroy
 
   validates :title, presence: true, length: { minimum: 3 }
   validates :url, presence: true
