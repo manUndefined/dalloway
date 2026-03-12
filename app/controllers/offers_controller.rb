@@ -40,6 +40,10 @@ class OffersController < ApplicationController
   def scrape
     url = params[:url]
     data = OfferScraper.call(url)
+    # Ajouter le domain deviné depuis le titre si absent
+    if data[:domain].blank? && data[:title].present?
+      data[:domain] = guess_domain(data[:title])
+    end
     render json: data
   rescue StandardError => e
     render json: { error: e.message }, status: :unprocessable_entity
@@ -68,5 +72,15 @@ class OffersController < ApplicationController
 
   def offer_params
     params.require(:offer).permit(:url, :title, :description, :city, :domain, :salary, :job_type, :experience_level)
+  end
+
+  def guess_domain(title)
+    t = title.downcase
+    return "Développement Web" if t.match?(/ruby|rails|web|frontend|backend|fullstack|react|angular|vue|django|node|php|laravel/)
+    return "Data / IA" if t.match?(/data|machine learning|ia\b|ai\b|scientist|analyst|python/)
+    return "DevOps / Cloud" if t.match?(/devops|cloud|aws|azure|sre|infra|kubernetes|docker/)
+    return "Mobile" if t.match?(/mobile|ios|android|flutter|react native|swift|kotlin/)
+    return "Cybersécurité" if t.match?(/security|sécurité|cyber|pentest/)
+    nil
   end
 end

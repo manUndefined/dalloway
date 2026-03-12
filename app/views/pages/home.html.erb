@@ -86,21 +86,21 @@
                 <label class="offer-label">
                   <i class="fa-solid fa-tag"></i> Type de contrat
                 </label>
-                <%= f.select :job_type, options_for_select(["CDI", "CDD", "Freelance", "Stage", "Alternance"]), { include_blank: "Sélectionner..." }, class: "offer-input" %>
+                <%= f.select :job_type, options_for_select(["CDI", "CDD", "Freelance", "Stage", "Alternance"]), { include_blank: "Sélectionner..." }, class: "offer-input", data: { scraper_target: "jobType" } %>
               </div>
 
               <div class="offer-field">
                 <label class="offer-label">
                   <i class="fa-solid fa-chart-line"></i> Niveau d'expérience
                 </label>
-                <%= f.select :experience_level, options_for_select(["Junior", "Intermédiaire", "Senior"]), { include_blank: "Sélectionner..." }, class: "offer-input" %>
+                <%= f.select :experience_level, options_for_select(["Junior", "Intermédiaire", "Senior"]), { include_blank: "Sélectionner..." }, class: "offer-input", data: { scraper_target: "experienceLevel" } %>
               </div>
 
               <div class="offer-field offer-field-full">
                 <label class="offer-label">
                   <i class="fa-solid fa-align-left"></i> Description
                 </label>
-                <%= f.text_area :description, placeholder: "Description du poste...", class: "offer-input offer-textarea", rows: 3 %>
+                <%= f.text_area :description, placeholder: "Description du poste...", class: "offer-input offer-textarea", rows: 3, data: { scraper_target: "description" } %>
               </div>
             </div>
 

@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["url", "title", "city", "domain", "salary", "spinner"]
+  static targets = ["url", "title", "city", "domain", "salary", "spinner", "jobType", "experienceLevel", "description"]
 
   connect() {
     this.timeout = null
@@ -24,20 +24,47 @@ export default class extends Controller {
     this.timeout = setTimeout(() => this.autofill(), 600)
   }
 
-  autofill() {
+  async autofill() {
     const url = this.urlTarget.value.trim()
     if (!url || !url.startsWith("http")) return
 
     this.showSpinner()
 
-    const data = this.extractFromUrl(url)
+    try {
+      const response = await fetch("/offers/scrape", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({ url: url })
+      })
 
-    if (data.title) this.fillField(this.titleTarget, data.title)
-    if (data.city) this.fillField(this.cityTarget, data.city)
-    if (data.domain) this.fillField(this.domainTarget, data.domain)
-    if (data.salary) this.fillField(this.salaryTarget, data.salary)
+      if (response.ok) {
+        const data = await response.json()
+        this.fillFromData(data)
+      } else {
+        // Fallback: extraction côté client depuis l'URL
+        const data = this.extractFromUrl(url)
+        this.fillFromData(data)
+      }
+    } catch (e) {
+      // Fallback client-side
+      const data = this.extractFromUrl(url)
+      this.fillFromData(data)
+    }
 
     this.hideSpinner()
+  }
+
+  fillFromData(data) {
+    if (data.title && this.hasTitleTarget) this.fillField(this.titleTarget, data.title)
+    if (data.city && this.hasCityTarget) this.fillField(this.cityTarget, data.city)
+    if (data.domain && this.hasDomainTarget) this.fillField(this.domainTarget, data.domain)
+    if (data.salary && this.hasSalaryTarget) this.fillField(this.salaryTarget, data.salary)
+    if (data.job_type && this.hasJobTypeTarget) this.fillSelect(this.jobTypeTarget, data.job_type)
+    if (data.experience_level && this.hasExperienceLevelTarget) this.fillSelect(this.experienceLevelTarget, data.experience_level)
+    if (data.description && this.hasDescriptionTarget) this.fillField(this.descriptionTarget, data.description)
   }
 
   extractFromUrl(url) {
@@ -50,7 +77,7 @@ export default class extends Controller {
       let data = {}
 
       if (host.includes("indeed")) {
-        data = this.parseIndeed(path, params, parsed.search)
+        data = this.parseIndeed(path, params)
       } else if (host.includes("linkedin")) {
         data = this.parseLinkedin(path)
       } else if (host.includes("welcometothejungle")) {
@@ -73,17 +100,11 @@ export default class extends Controller {
     }
   }
 
-  parseIndeed(path, params, search) {
+  parseIndeed(path, params) {
     const data = {}
-
-    // /viewjob?jk=xxx — try to get info from other params
     if (params.q) data.title = this.cleanSlug(params.q)
     if (params.l) data.city = this.cleanSlug(params.l)
-
-    // Try to extract from full URL text after decode
-    // Indeed shared URLs sometimes have title in 'from' related params
     if (!data.title) {
-      // /emplois-Titre-Ville pattern
       const emploiMatch = path.match(/\/emplois?[_-](.+)/i)
       if (emploiMatch) {
         const parts = emploiMatch[1].split(/[-_]/).filter(p => p.length > 1)
@@ -91,10 +112,6 @@ export default class extends Controller {
         if (parts.length >= 2) data.city = this.cleanSlug(parts[parts.length - 1])
       }
     }
-
-    // /rc/clk/...?jk=xxx&fccid=xxx&vjs=3 pattern — has no useful info
-    // /jobs?q=xxx&l=xxx pattern — already handled above
-
     return data
   }
 
@@ -105,7 +122,6 @@ export default class extends Controller {
       const slug = match[1].replace(/-\d+$/, "")
       const parts = slug.split("-")
       if (parts.length > 1) {
-        // Last part is often the city or a number
         const lastPart = parts[parts.length - 1]
         if (lastPart.match(/^\d+$/)) {
           data.title = this.cleanSlug(parts.slice(0, -1).join(" "))
@@ -141,7 +157,6 @@ export default class extends Controller {
 
   parseHellowork(path) {
     const data = {}
-    // /offre-emploi/titre-ville-ref.html
     const match = path.match(/\/offre[s-]?emploi\/(.+?)(?:\.html)?$/)
     if (match) {
       const parts = match[1].split("-").filter(p => p.length > 1)
@@ -189,6 +204,29 @@ export default class extends Controller {
     target.value = value
     target.classList.add("offer-input-filled")
     setTimeout(() => target.classList.remove("offer-input-filled"), 1000)
+  }
+
+  fillSelect(target, value) {
+    if (target.value) return // don't overwrite existing values
+    // Match option by text content (case-insensitive)
+    const options = target.querySelectorAll("option")
+    for (const opt of options) {
+      if (opt.text.toLowerCase().trim() === value.toLowerCase().trim()) {
+        target.value = opt.value
+        target.classList.add("offer-input-filled")
+        setTimeout(() => target.classList.remove("offer-input-filled"), 1000)
+        return
+      }
+    }
+    // Try partial match
+    for (const opt of options) {
+      if (opt.text.toLowerCase().includes(value.toLowerCase()) || value.toLowerCase().includes(opt.text.toLowerCase())) {
+        target.value = opt.value
+        target.classList.add("offer-input-filled")
+        setTimeout(() => target.classList.remove("offer-input-filled"), 1000)
+        return
+      }
+    }
   }
 
   showSpinner() {
