@@ -56,6 +56,14 @@ class OffersController < ApplicationController
   def show
     @offer = Offer.find(params[:id])
     @cover_letter = CoverLetter.new
+  rescue ActiveRecord::RecordNotFound
+    redirect_to root_path, alert: "Cette offre n'existe plus"
+  end
+
+  def destroy
+    @offer = Offer.find(params[:id])
+    @offer.destroy
+    redirect_to root_path, notice: "L'offre a été supprimée"
   end
 
   def apply

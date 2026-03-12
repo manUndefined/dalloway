@@ -15,14 +15,80 @@
   </div>
 </section>
 
-<div class="container">
-  <!-- ADD OFFER BUTTON -->
-  <div class="add-offer-bar">
-    <button class="offer-btn offer-btn-primary" data-bs-toggle="modal" data-bs-target="#addOfferModal">
-      <i class="fa-solid fa-plus"></i> Nouvelle offre
-    </button>
+<!-- STATS -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-briefcase"></i></div>
+        <div class="stat-number"><%= @stats[:offers] %></div>
+        <div class="stat-label">Offres sauvegardées</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-comments"></i></div>
+        <div class="stat-number"><%= @stats[:interviews] %></div>
+        <div class="stat-label">Entretiens réalisés</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-number"><%= @stats[:users] %></div>
+        <div class="stat-label">Utilisateurs actifs</div>
+      </div>
+    </div>
   </div>
+</section>
 
+<!-- COMMENT CA MARCHE -->
+<section class="how-section">
+  <div class="container">
+    <div class="how-header">
+      <h2 class="how-title">Comment ça marche ?</h2>
+      <p class="how-subtitle">Préparez vos entretiens en 3 étapes simples</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-step-number">1</div>
+        <div class="how-step-icon"><i class="fa-solid fa-link"></i></div>
+        <h3 class="how-step-title">Collez un lien d'offre</h3>
+        <p class="how-step-desc">Copiez l'URL d'une offre depuis HelloWork, Indeed ou LinkedIn. Les champs se remplissent automatiquement.</p>
+      </div>
+      <div class="how-connector"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="how-step">
+        <div class="how-step-number">2</div>
+        <div class="how-step-icon"><i class="fa-solid fa-robot"></i></div>
+        <h3 class="how-step-title">Lancez l'entretien IA</h3>
+        <p class="how-step-desc">Notre IA analyse l'offre et simule un entretien réaliste adapté au poste et à votre profil.</p>
+      </div>
+      <div class="how-connector"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="how-step">
+        <div class="how-step-number">3</div>
+        <div class="how-step-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <h3 class="how-step-title">Progressez</h3>
+        <p class="how-step-desc">Recevez un feedback détaillé, identifiez vos points forts et axes d'amélioration.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2 class="cta-title">Prêt à vous lancer ?</h2>
+      <p class="cta-desc">Ajoutez une offre ou explorez celles disponibles pour commencer votre entraînement.</p>
+      <div class="cta-actions">
+        <button class="hero-cta hero-cta-primary" data-bs-toggle="modal" data-bs-target="#addOfferModal">
+          <i class="fa-solid fa-plus"></i> Ajouter une offre
+        </button>
+        <a href="#offres" class="hero-cta hero-cta-secondary">
+          <i class="fa-solid fa-magnifying-glass"></i> Explorer les offres
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
   <!-- ADD OFFER MODAL -->
   <div class="modal fade" id="addOfferModal" tabindex="-1" aria-labelledby="addOfferModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -115,7 +181,7 @@
   </div>
 
   <!-- HELLOWORK OFFERS -->
-  <section class="jobs-section">
+  <section class="jobs-section" id="offres">
     <div class="jobs-header">
       <h2 class="jobs-title">Offres du moment</h2>
       <p class="jobs-subtitle">
@@ -126,6 +192,21 @@
         <% end %>
       </p>
     </div>
+
+    <!-- SEARCH BAR -->
+    <%= form_with url: root_path, method: :get, class: "search-bar" do |f| %>
+      <div class="search-fields">
+        <div class="search-field">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <%= f.text_field :keyword, value: @search_keyword, placeholder: "Métier, technologie...", class: "search-input" %>
+        </div>
+        <div class="search-field">
+          <i class="fa-solid fa-location-dot"></i>
+          <%= f.text_field :city, value: @search_city, placeholder: "Ville", class: "search-input" %>
+        </div>
+      </div>
+      <%= f.submit "Rechercher", class: "search-btn" %>
+    <% end %>
 
     <% if @hellowork_offers.present? %>
       <div class="jobs-grid">
@@ -216,18 +297,47 @@
                 <i class="fa-solid fa-eye"></i> Voir
               <% end %>
               <% if user_signed_in? %>
-                <%= button_to apply_offer_path(offer), method: :post, class: "job-btn job-btn-apply" do %>
-                  <i class="fa-solid fa-paper-plane"></i> Postuler
-                <% end %>
-              <% else %>
-                <%= link_to new_user_session_path, class: "job-btn job-btn-outline" do %>
-                  <i class="fa-solid fa-right-to-bracket"></i> Connexion
-                <% end %>
+                <button type="button" class="job-btn job-btn-delete" data-bs-toggle="modal" data-bs-target="#deleteOfferModal<%= offer.id %>">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
               <% end %>
             </div>
           </div>
         <% end %>
       </div>
+
+      <!-- Modals suppression -->
+      <% if user_signed_in? %>
+        <% @offers.each do |offer| %>
+          <div class="modal fade" id="deleteOfferModal<%= offer.id %>" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+              <div class="modal-content offer-modal-content">
+                <div class="modal-header offer-modal-header">
+                  <h5 class="modal-title">Supprimer l'offre</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                  <div class="delete-modal-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                  </div>
+                  <p class="delete-modal-text">Supprimer <strong><%= offer.title %></strong> ?</p>
+                  <p class="delete-modal-sub">Cette action est irréversible.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                  <button type="button" class="job-btn job-btn-outline" data-bs-dismiss="modal">Annuler</button>
+                  <form action="<%= offer_path(offer) %>" method="post">
+                    <input type="hidden" name="_method" value="delete">
+                    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                    <button type="submit" class="job-btn job-btn-danger">
+                      <i class="fa-solid fa-trash"></i> Supprimer
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
     </section>
   <% end %>
 </div>

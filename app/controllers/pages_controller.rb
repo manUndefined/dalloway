@@ -4,6 +4,11 @@ class PagesController < ApplicationController
   def home
     @offers = filtered_offers
     @hellowork_offers = fetch_hellowork_offers
+    @stats = {
+      offers: Offer.count,
+      interviews: Chat.count,
+      users: User.count
+    }
   end
 
   private
@@ -25,12 +30,21 @@ class PagesController < ApplicationController
   end
 
   def fetch_hellowork_offers
-    keyword = if user_signed_in? && current_user.preferred_sector.present?
+    keyword = if params[:keyword].present?
+                params[:keyword]
+              elsif user_signed_in? && current_user.preferred_sector.present?
                 current_user.preferred_sector
               else
                 "développeur web"
               end
-    city = user_signed_in? ? current_user.preferred_city : nil
+    city = if params[:city].present?
+             params[:city]
+           elsif user_signed_in?
+             current_user.preferred_city
+           end
+
+    @search_keyword = keyword
+    @search_city = city
 
     cache_key = "hellowork_offers/#{keyword}/#{city}"
     Rails.cache.fetch(cache_key, expires_in: 30.minutes) do

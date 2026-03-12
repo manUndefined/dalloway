@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   resource :profile, only: [:show, :edit, :update]
 
-  resources :offers, only: [:index, :show, :create] do
+  resources :offers, only: [:index, :show, :create, :destroy] do
     collection do
       post :scrape
       post :import
@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   resources :cover_letters, only: [:update]
 
 	
-  resources :chats, only: [:index, :show] do
+  resources :chats, only: [:index, :show, :destroy] do
     resources :messages, only: [:create]
   end
 end

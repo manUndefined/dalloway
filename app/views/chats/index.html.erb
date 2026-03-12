@@ -10,35 +10,71 @@
     <% if @chats.present? %>
       <div class="history-list">
         <% @chats.each do |chat| %>
-          <%= link_to chat_path(chat), class: "history-card" do %>
-            <div class="history-card-left">
-              <div class="history-card-icon">
-                <i class="fa-solid fa-comments"></i>
-              </div>
-              <div class="history-card-info">
-                <h3 class="history-card-title"><%= chat.title %></h3>
-                <p class="history-card-offer">
-                  <i class="fa-solid fa-briefcase"></i> <%= chat.offer.title %>
-                  <% if chat.offer.city.present? %>
-                    <span class="history-card-sep">&bull;</span> <%= chat.offer.city %>
-                  <% end %>
-                </p>
-                <div class="history-card-meta">
-                  <span><i class="fa-regular fa-message"></i> <%= chat.messages.size %> messages</span>
-                  <span><i class="fa-regular fa-clock"></i> <%= time_ago_in_words(chat.created_at) %></span>
+          <div class="history-card-wrapper">
+            <%= link_to chat_path(chat), class: "history-card" do %>
+              <div class="history-card-left">
+                <div class="history-card-icon">
+                  <i class="fa-solid fa-comments"></i>
+                </div>
+                <div class="history-card-info">
+                  <h3 class="history-card-title"><%= chat.title %></h3>
+                  <p class="history-card-offer">
+                    <i class="fa-solid fa-briefcase"></i> <%= chat.offer.title %>
+                    <% if chat.offer.city.present? %>
+                      <span class="history-card-sep">&bull;</span> <%= chat.offer.city %>
+                    <% end %>
+                  </p>
+                  <div class="history-card-meta">
+                    <span><i class="fa-regular fa-message"></i> <%= chat.messages.size %> messages</span>
+                    <span><i class="fa-regular fa-clock"></i> <%= time_ago_in_words(chat.created_at) %></span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="history-card-right">
-              <% last_msg = chat.messages.last %>
-              <% if last_msg %>
-                <p class="history-card-preview"><%= truncate(last_msg.content, length: 80) %></p>
-              <% end %>
-              <span class="history-card-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-            </div>
-          <% end %>
+              <div class="history-card-right">
+                <% last_msg = chat.messages.last %>
+                <% if last_msg %>
+                  <p class="history-card-preview"><%= truncate(last_msg.content, length: 80) %></p>
+                <% end %>
+                <span class="history-card-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+              </div>
+            <% end %>
+            <button type="button" class="history-delete-btn" data-bs-toggle="modal" data-bs-target="#deleteChatModal<%= chat.id %>">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
         <% end %>
       </div>
+
+      <!-- Modals suppression -->
+      <% @chats.each do |chat| %>
+        <div class="modal fade" id="deleteChatModal<%= chat.id %>" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content offer-modal-content">
+              <div class="modal-header offer-modal-header">
+                <h5 class="modal-title">Supprimer l'entretien</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center">
+                <div class="delete-modal-icon">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <p class="delete-modal-text">Supprimer <strong><%= chat.title %></strong> ?</p>
+                <p class="delete-modal-sub">L'historique des messages sera perdu.</p>
+              </div>
+              <div class="modal-footer justify-content-center">
+                <button type="button" class="job-btn job-btn-outline" data-bs-dismiss="modal">Annuler</button>
+                <form action="<%= chat_path(chat) %>" method="post">
+                  <input type="hidden" name="_method" value="delete">
+                  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                  <button type="submit" class="job-btn job-btn-danger">
+                    <i class="fa-solid fa-trash"></i> Supprimer
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
     <% else %>
       <div class="history-empty">
         <div class="history-empty-icon">
