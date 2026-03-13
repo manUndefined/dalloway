@@ -14,6 +14,11 @@ class OffersController < ApplicationController
   def import
     existing = Offer.find_by(url: params[:url])
     if existing
+      # Re-scrape description if missing or too short (og:description fallback)
+      if existing.description.blank? || existing.description.length < 100
+        data = OfferScraper.call(params[:url])
+        existing.update(description: data[:description]) if data[:description].present? && data[:description].length > (existing.description&.length || 0)
+      end
       redirect_to offer_path(existing)
       return
     end
@@ -27,7 +32,8 @@ class OffersController < ApplicationController
       domain: params[:domain].presence || data[:domain],
       salary: data[:salary] || params[:salary],
       job_type: params[:job_type].presence || data[:job_type],
-      experience_level: data[:experience_level]
+      experience_level: data[:experience_level],
+      source: "hellowork"
     )
 
     if offer.save
