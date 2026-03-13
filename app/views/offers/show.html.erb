@@ -1,130 +1,117 @@
-<div class="main-content">
+<div class="job-container">
 
-  <!-- HEADER ACTION -->
-  <div class="action-header" style="display:flex; justify-content:flex-end; margin-bottom:20px;">
-    <%= button_to "🎯 Nouvelle session d'entraînement",
-                offer_chats_path(@offer),
-                method: :post,
-                class: "btn-training" %>
-  </div>
+  <button class="btn-session">
+    <span class="btn-icon">🎯</span>
+    Nouvelle session d'entraînement
+  </button>
 
-
-  <!-- CARD OFFRE -->
-  <div class="card">
-
-
+  <div class="job-header">
     <h1><%= @offer.title %></h1>
 
-    <%= link_to "Retour à la liste", root_path %>
+    <div class="job-meta">
+      <span class="badge">📍<%= @offer.city %></span>
+      <span class="badge">💼 <%= @offer.job_type %></span>
+      <span class="badge salary">💰 <%= @offer.salary %>k€</span>
+    </div>
 
-<div class="job-grid">
-
-  <div class="job-item">
-    <span class="label">DESCRIPTION</span>
-    <div class="job-value">Développeur Web</div>
+    <a href="<%= @offer.url %>" target="_blank" class="apply-btn">Postuler</a>
   </div>
 
-  <div class="job-item">
-    <span class="label">LOCALISATION</span>
-    <div class="job-value">📍 Annecy - 74</div>
-  </div>
+  
+  <div class="job-layout">
 
-  <div class="job-item">
-    <span class="label">RÉMUNÉRATION</span>
-    <div class="job-value">💰 40k€</div>
-  </div>
+    <div class="job-content">
 
-  <div class="job-item">
-    <span class="label">TYPE DE JOB</span>
-    <div class="job-value">💼 CDI</div>
+      <section class="job-section">
+        <h2>Description du poste</h2>
+        <p>
+          Nous recherchons un développeur web pour rejoindre notre équipe et
+          participer à la création d'applications modernes.
+        </p>
+      </section>
+
+      <section class="job-section">
+        <h2>Missions</h2>
+        <ul>
+          <li>Développer des applications web</li>
+          <li>Collaborer avec l'équipe produit</li>
+          <li>Maintenir les services existants</li>
+        </ul>
+      </section>
+
+      <section class="job-section">
+        <h2>Profil recherché</h2>
+        <ul>
+          <li>Maîtrise HTML / CSS / JS</li>
+          <li>Expérience en développement web</li>
+          <li>Esprit d'équipe</li>
+        </ul>
+      </section>
+
+    </div>
+
+
+    <aside class="job-sidebar">
+
+      <div class="info-card">
+
+        <h3>Informations</h3>
+        <div class="info-row">
+          <span>📍 Localisation</span>
+          <strong><%= @offer.city %></strong>
+        </div>
+        <div class="info-row">
+          <span>💼 Contrat</span>
+          <strong><%= @offer.job_type %></strong>
+        </div>
+        <div class="info-row">
+          <span>💰 Salaire</span>
+          <strong><%= @offer.salary %>k€</strong>
+        </div>
+
+      </div>
+
+    </aside>
+
   </div>
 
 </div>
 
-<div style="height: 30px;"></div>
-
-    <span class="label">Lien</span>
-    <%= link_to "Voir l'offre", @offer.url, target: "_blank" %>
-
-    <p class="date">
-      Créé le <%= @offer.created_at.strftime("%d %B %Y") %>
-    </p>
-
-    <br>
-
-    <%= link_to "← Retour à la liste", offers_path, class: "btn-secondary" %>
-
-  </div>
-
 
   <!-- CARD LETTRE -->
-  <div class="card">
 
+<div class="letter-container">
+  <div class="letter-section">
     <h2>Générer une lettre de motivation</h2>
 
     <% if @offer.cover_letters.any? %>
-
       <%= form_with model: [@offer.cover_letters.last], local: true do |f| %>
-
         <span class="label">Contenu</span>
         <%= f.text_area :content %>
 
-        <span class="label">Des précisions</span>
+        <span class="label" style="margin-top:16px;">Des précisions</span>
         <%= f.text_area :details %>
 
-        <br>
-
-        <%= f.submit "Mettre à jour la lettre de motivation", class: "btn-primary" %>
-
+        <%= f.submit "Mettre à jour la lettre", class: "btn-full" %>
       <% end %>
-
-
-      <br>
 
       <%= form_with model: [@offer, @cover_letter], local: true do |f| %>
-        <%= f.submit "Regénérer la lettre", class: "btn-secondary" %>
+        <%= f.submit "Regénérer la lettre", class: "btn-full", style: "background:#475569;" %>
       <% end %>
-
 
     <% else %>
-
       <%= form_with model: [@offer, @cover_letter], local: true do |f| %>
-
         <span class="label">Des précisions</span>
         <%= f.text_area :details %>
-
-        <br>
-
-        <%= f.submit "Générer la lettre", class: "btn-primary" %>
-
+        <%= f.submit "Générer la lettre", class: "btn-full" %>
       <% end %>
-
     <% end %>
 
-
-    <!-- LETTRE GÉNÉRÉE -->
-
     <% if @letter.present? %>
-
       <div class="generated-letter">
         <%= simple_format(@letter) %>
       </div>
-
     <% end %>
 
-
-    <!-- BOUTON CANDIDATURE -->
-
-    <div style="margin-top:20px;">
-
-      <%= button_to "Candidater",
-                    apply_offer_path(@offer),
-                    method: :post,
-                    class: "btn-action",
-                    data: { confirm: "Voulez-vous vraiment envoyer votre candidature ?" } %>
-
-    </div>
-
   </div>
-
 </div>
