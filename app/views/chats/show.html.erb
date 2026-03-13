@@ -1,5 +1,5 @@
-<div class="container" data-controller="chat">
-  <section class="chat-section">
+<div class="chat-page" data-controller="chat">
+  <div class="chat-shell">
     <div class="chat-header">
       <%= link_to chats_path, class: "chat-back" do %>
         <i class="fa-solid fa-arrow-left"></i> Historique
@@ -20,38 +20,27 @@
     <div class="chat-messages" id="messages" data-chat-target="messages">
       <%= render @chat.messages.order(:created_at) %>
     </div>
+    <div class="chat-form-wrapper">
+      <%= form_with model: [@chat, @message],
+                    id: "new_message",
+                    class: "chat-form",
+                    data: {
+                      chat_target: "form",
+                      action: "turbo:submit-start->chat#submitting turbo:submit-end->chat#submitted"
+                    } do |f| %>
+        <div class="chat-form-group">
+          <%= f.text_area :content,
+                          rows: 2,
+                          placeholder: "Écrivez votre réponse à Dalloway...",
+                          class: "chat-input" %>
+        </div>
 
-    <div class="chat-bubble chat-bubble-assistant d-none" data-chat-target="typing">
-      <div class="chat-bubble-avatar">
-        <i class="fa-solid fa-robot"></i>
-      </div>
-
-      <div class="chat-bubble-content">
-        <div class="chat-bubble-role">Dalloway IA</div>
-        <div class="chat-bubble-text">Dalloway écrit...</div>
-      </div>
+        <div class="chat-form-actions">
+          <%= f.submit "Envoyer",
+                       class: "btn btn-primary chat-submit",
+                       data: { chat_target: "submit" } %>
+        </div>
+      <% end %>
     </div>
-  </section>
-</div>
-
-<div class="chat-form">
-  <%= form_with model: [@chat, @message],
-                id: "new_message",
-                data: {
-                  chat_target: "form",
-                  action: "turbo:submit-start->chat#submitting turbo:submit-end->chat#submitted"
-                } do |f| %>
-    <div class="chat-form-group">
-      <%= f.text_area :content,
-                      rows: 4,
-                      placeholder: "Écrivez votre réponse à Dalloway...",
-                      class: "chat-input" %>
-    </div>
-
-    <div class="chat-form-actions">
-      <%= f.submit "Envoyer",
-                   class: "btn btn-primary",
-                   data: { chat_target: "submit" } %>
-    </div>
-  <% end %>
+  </div>
 </div>
