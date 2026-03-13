@@ -1,9 +1,11 @@
 <div class="job-container">
 
-  <button class="btn-session">
-    <span class="btn-icon">🎯</span>
-    Nouvelle session d'entraînement
-  </button>
+  <%= link_to offer_chats_path(@offer),
+            data: { turbo_method: :post },
+            class: "btn-session" do %>
+  <span class="btn-icon">🎯</span>
+  Nouvelle session d'entraînement
+<% end %>
 
   <div class="job-header">
     <h1><%= @offer.title %></h1>
