@@ -25,37 +25,12 @@
     <div class="job-content">
 
       <section class="job-section">
-        <h2>Description du poste</h2>
-        <p>
-          Nous recherchons un développeur web pour rejoindre notre équipe et
-          participer à la création d'applications modernes.
-        </p>
-      </section>
-
-      <section class="job-section">
-        <h2>Missions</h2>
-        <ul>
-          <li>Développer des applications web</li>
-          <li>Collaborer avec l'équipe produit</li>
-          <li>Maintenir les services existants</li>
-        </ul>
-      </section>
-
-      <section class="job-section">
-        <h2>Profil recherché</h2>
-        <ul>
-          <li>Maîtrise HTML / CSS / JS</li>
-          <li>Expérience en développement web</li>
-          <li>Esprit d'équipe</li>
-        </ul>
-      </section>
+    
+      <span class="label">Description du poste</span>
+      <div class="offer-description-content"><%= simple_format(@offer.description) %></div>
+      <aside class="job-sidebar">
 
     </div>
-
-
-    <span class="label">Description</span>
-    <div class="offer-description-content"><%= simple_format(@offer.description) %></div>
-    <aside class="job-sidebar">
 
       <div class="info-card">
 
