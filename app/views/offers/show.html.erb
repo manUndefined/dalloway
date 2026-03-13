@@ -13,19 +13,7 @@
       <% end %>
     </div>
 
-    <a href="<%= @offer.url %>" target="_blank" class="apply-btn">Postuler</a>
-  </div>
-
-  
-  <div class="job-layout">
-
-    <div class="job-content">
-
-      <section class="job-section">
-    
-      <span class="label">Description du poste</span>
-      <div class="offer-description-content"><%= simple_format(@offer.description) %></div>
-      <aside class="job-sidebar">
+    <h1 class="offer-show-title"><%= @offer.title %></h1>
 
     <div class="offer-show-badges">
       <% if @offer.city.present? %>
@@ -45,20 +33,24 @@
       <% end %>
     </div>
 
-      <div class="info-card">
+    <% if @offer.url.present? %>
+      <a href="<%= @offer.url %>" target="_blank" class="offer-show-apply">
+        <i class="fa-solid fa-external-link"></i> Postuler sur le site
+      </a>
+    <% end %>
+  </div>
 
-        <h3>Informations</h3>
-        <div class="info-row">
-          <span>📍 Localisation</span>
-          <strong><%= @offer.city %></strong>
-        </div>
-        <div class="info-row">
-          <span>💼 Contrat</span>
-          <strong><%= @offer.job_type %></strong>
-        </div>
-        <div class="info-row">
-          <span>💰 Salaire</span>
-          <strong><%= @offer.salary %>k€</strong>
+  <!-- LAYOUT 2 COLONNES -->
+  <div class="offer-show-layout">
+
+    <!-- COLONNE PRINCIPALE -->
+    <div class="offer-show-main">
+      <% if @offer.description.present? %>
+        <div class="offer-show-card">
+          <h2 class="offer-show-section-title"><i class="fa-solid fa-align-left"></i> Description du poste</h2>
+          <div class="offer-show-description">
+            <%= simple_format(@offer.description) %>
+          </div>
         </div>
       <% end %>
 
