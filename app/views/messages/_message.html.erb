@@ -1,0 +1,19 @@
+<div class="chat-bubble chat-bubble-<%= message.role %>">
+  <div class="chat-bubble-avatar">
+    <% if message.role == "assistant" %>
+      <i class="fa-solid fa-robot"></i>
+    <% else %>
+      <span><%= current_user.first_name&.first&.upcase || "U" %></span>
+    <% end %>
+  </div>
+
+  <div class="chat-bubble-content">
+    <div class="chat-bubble-role">
+      <%= message.role == "assistant" ? "Dalloway IA" : "Vous" %>
+    </div>
+
+    <div class="chat-bubble-text">
+      <%= simple_format(message.content) %>
+    </div>
+  </div>
+</div>

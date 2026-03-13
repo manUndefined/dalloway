@@ -2,8 +2,9 @@
 
   <!-- HEADER ACTION -->
   <div class="action-header" style="display:flex; justify-content:flex-end; margin-bottom:20px;">
-    <%= link_to "🎯 Nouvelle session d'entraînement",
-                "#",
+    <%= button_to "🎯 Nouvelle session d'entraînement",
+                offer_chats_path(@offer),
+                method: :post,
                 class: "btn-training" %>
   </div>
 

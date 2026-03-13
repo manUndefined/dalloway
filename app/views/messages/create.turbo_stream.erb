@@ -1,0 +1,16 @@
+<%= turbo_stream.append "messages", @message %>
+<%= turbo_stream.append "messages", @assistant_message %>
+<%= turbo_stream.replace "new_message" do %>
+  <%= form_with model: [@chat, Message.new], id: "new_message" do |f| %>
+    <div class="chat-form-group">
+      <%= f.text_area :content,
+                      rows: 4,
+                      placeholder: "Écrivez votre réponse à Dalloway...",
+                      class: "chat-input" %>
+    </div>
+
+    <div class="chat-form-actions">
+      <%= f.submit "Envoyer", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+<% end %>
