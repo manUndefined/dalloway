@@ -14,7 +14,7 @@ class PagesController < ApplicationController
   private
 
   def filtered_offers
-    offers = Offer.order(created_at: :desc)
+    offers = Offer.where(source: "manual").order(created_at: :desc)
 
     if user_signed_in? && current_user
       offers = offers.where(job_type: current_user.preferred_job_type) if current_user.preferred_job_type.present?
@@ -48,7 +48,7 @@ class PagesController < ApplicationController
 
     cache_key = "hellowork_offers/#{keyword}/#{city}"
     Rails.cache.fetch(cache_key, expires_in: 30.minutes) do
-      HelloworkScraper.call(keyword: keyword, city: city, limit: 12)
+      HelloworkScraper.call(keyword: keyword, city: city, limit: 8)
     end
   end
 end

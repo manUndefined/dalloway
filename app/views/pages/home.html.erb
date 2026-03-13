@@ -3,13 +3,23 @@
   <div class="hero-bg">
     <div class="hero-glow hero-glow-1"></div>
     <div class="hero-glow hero-glow-2"></div>
+    <div class="hero-glow hero-glow-3"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-particles">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
   </div>
   <div class="container">
     <div class="hero-content">
       <span class="hero-badge">
+        <span class="hero-badge-dot"></span>
         <i class="fa-solid fa-wand-magic-sparkles"></i> Propulsé par l'IA
       </span>
-      <h1 class="hero-title">Décrochez votre prochain job<br><span class="hero-highlight">en quelques clics</span></h1>
+      <h1 class="hero-title">
+        <span class="hero-title-line hero-anim-1">Décrochez votre</span>
+        <span class="hero-title-line hero-anim-2">prochain job</span>
+        <span class="hero-title-line hero-anim-3"><span class="hero-highlight">en quelques clics</span></span>
+      </h1>
       <p class="hero-desc">Entraînez-vous aux entretiens avec une IA qui s'adapte à votre CV et à l'offre ciblée.</p>
     </div>
   </div>
@@ -211,7 +221,7 @@
     <% if @hellowork_offers.present? %>
       <div class="jobs-grid">
         <% @hellowork_offers.each do |hw| %>
-          <div class="job-card">
+          <%= button_to import_offers_path, method: :post, params: { url: hw[:url], title: hw[:title], city: hw[:city], domain: hw[:domain], job_type: hw[:job_type] }, class: "job-card job-card-clickable" do %>
             <div class="job-card-top">
               <div class="job-card-icon">
                 <i class="fa-solid fa-briefcase"></i>
@@ -241,12 +251,7 @@
                 <p class="job-card-date"><i class="fa-regular fa-clock"></i> <%= hw[:posted_at] %></p>
               <% end %>
             </div>
-            <div class="job-card-actions">
-              <%= button_to import_offers_path, method: :post, params: { url: hw[:url], title: hw[:title], city: hw[:city], domain: hw[:domain], job_type: hw[:job_type] }, class: "job-btn job-btn-outline" do %>
-                <i class="fa-solid fa-eye"></i> Voir l'offre
-              <% end %>
-            </div>
-          </div>
+          <% end %>
         <% end %>
       </div>
     <% else %>
@@ -270,7 +275,7 @@
 
       <div class="jobs-grid">
         <% @offers.each do |offer| %>
-          <div class="job-card">
+          <%= link_to offer_path(offer), class: "job-card job-card-clickable" do %>
             <div class="job-card-top">
               <div class="job-card-icon">
                 <i class="fa-solid fa-bookmark"></i>
@@ -292,17 +297,7 @@
                 <% end %>
               </div>
             </div>
-            <div class="job-card-actions">
-              <%= link_to offer_path(offer), class: "job-btn job-btn-outline" do %>
-                <i class="fa-solid fa-eye"></i> Voir
-              <% end %>
-              <% if user_signed_in? %>
-                <button type="button" class="job-btn job-btn-delete" data-bs-toggle="modal" data-bs-target="#deleteOfferModal<%= offer.id %>">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              <% end %>
-            </div>
-          </div>
+          <% end %>
         <% end %>
       </div>
 

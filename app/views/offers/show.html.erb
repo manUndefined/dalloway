@@ -18,7 +18,7 @@
 
 
     <span class="label">Description</span>
-    <p><%= @offer.description %></p>
+    <div class="offer-description-content"><%= simple_format(@offer.description) %></div>
 
     <span class="label">Lien</span>
     <%= link_to "Voir l'offre", @offer.url, target: "_blank" %>

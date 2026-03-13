@@ -1,6 +1,8 @@
 class OfferScraper
   require "open-uri"
   require "nokogiri"
+  require "cgi"
+  require "json"
 
   def self.call(url)
     return {} if url.blank?
@@ -164,18 +166,47 @@ class OfferScraper
     end
 
     def extract_description(doc)
-      # HelloWork: og:description is clean and useful
+      # Priority 1: JSON-LD structured data (most reliable, full description)
+      doc.css('script[type="application/ld+json"]').each do |script|
+        begin
+          data = JSON.parse(script.text)
+          if data["@type"] == "JobPosting" && data["description"].present?
+            return clean_html_description(data["description"])
+          end
+        rescue JSON::ParserError
+          next
+        end
+      end
+
+      # Priority 2: generic job description containers
+      desc_el = doc.at_css('[class*="job-description"], [id*="jobDescription"], [id*="job-description"]')
+      return clean_description(desc_el) if desc_el
+
+      # Priority 3: og:description fallback
       og = doc.at_css('meta[property="og:description"]')&.[]("content")
-      return og if og.present? && og.length > 20
+      return og.strip if og.present? && og.length > 20
 
       meta = doc.at_css('meta[name="description"]')&.[]("content")
-      return meta if meta.present? && meta.length > 20
+      return meta.strip if meta.present? && meta.length > 20
 
-      # Try generic job description containers
-      desc_el = doc.at_css('[class*="job-description"], [id*="jobDescription"], [class*="description"]')
-      return desc_el.text.strip.truncate(1000) if desc_el
+      nil
+    end
 
-      doc.css("p").first(5).map { |p| p.text.strip }.reject(&:blank?).join(" ").truncate(500).presence
+    def clean_html_description(html_string)
+      html_string
+        .gsub(/<br\s*\/?>/, "\n")
+        .gsub(/<\/?(p|div|li|h[1-6])[^>]*>/, "\n")
+        .gsub(/<[^>]+>/, "")
+        .then { |t| CGI.unescapeHTML(t) }
+        .gsub(/[ \t]+/, " ")
+        .gsub(/\n{3,}/, "\n\n")
+        .strip
+        .truncate(3000)
+        .presence
+    end
+
+    def clean_description(element)
+      clean_html_description(element.inner_html)
     end
 
     def extract_city(doc)
