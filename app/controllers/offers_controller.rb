@@ -5,7 +5,13 @@ class OffersController < ApplicationController
   def create
     @offer = Offer.new(offer_params)
     if @offer.save
-      redirect_to root_path, notice: "Offre ajoutée avec succès"
+      if params[:commit] == "Lancer la session"
+        chat = Chat.create!(title: "Dalloway", user: current_user, offer: @offer)
+        chat.messages.create!(role: "assistant", content: opening_message(@offer, current_user))
+        redirect_to chat_path(chat), notice: "Session d'entraînement créée."
+      else
+        redirect_to root_path, notice: "Offre ajoutée avec succès"
+      end
     else
       redirect_to root_path, alert: "Erreur : #{@offer.errors.full_messages.join(', ')}"
     end
@@ -86,6 +92,22 @@ class OffersController < ApplicationController
 
   def offer_params
     params.require(:offer).permit(:url, :title, :description, :city, :domain, :salary, :job_type, :experience_level)
+  end
+
+  def opening_message(offer, user)
+    <<~TEXT
+      Bonjour #{user.first_name.presence || 'et bienvenue'} 👋
+
+      Je vais vous entraîner pour votre entretien sur le poste "#{offer.title}".
+
+      Mon rôle :
+      - vous poser des questions comme un recruteur
+      - adapter les questions à l'offre visée
+      - tenir compte de votre profil
+      - vous aider à améliorer vos réponses
+
+      Pour commencer, présentez-vous en 4 à 6 phrases comme si vous étiez en entretien.
+    TEXT
   end
 
   def guess_domain(title)

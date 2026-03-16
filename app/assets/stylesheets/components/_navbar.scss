@@ -6,14 +6,20 @@
   position: sticky;
   top: 0;
   z-index: 1030;
+
+  .container {
+    display: flex;
+    align-items: center;
+  }
 }
 
 // Brand
 .navbar-dalloway .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
   text-decoration: none;
+  padding: 0;
+  margin: 0;
   transition: opacity 0.15s;
 
   &:hover {
@@ -21,25 +27,11 @@
   }
 }
 
-.navbar-logo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: $primary;
-  color: #fff;
-  font-weight: 800;
-  font-size: 18px;
-  letter-spacing: -0.5px;
-}
-
-.navbar-brand-text {
-  font-weight: 700;
-  font-size: 20px;
-  color: #1f2937;
-  letter-spacing: -0.3px;
+.navbar-logo-img {
+  max-height: 50px;
+  width: auto;
+  object-fit: contain;
+  display: block;
 }
 
 // Toggler

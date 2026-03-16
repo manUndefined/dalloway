@@ -1,8 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-dalloway">
   <div class="container">
     <%= link_to root_path, class: "navbar-brand" do %>
-      <span class="navbar-logo">D</span>
-      <span class="navbar-brand-text">Dalloway</span>
+      <%= image_tag "dalloway.png", alt: "Dalloway", class: "navbar-logo-img" %>
     <% end %>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,11 +14,6 @@
           <li class="nav-item">
             <%= link_to root_path, class: "nav-link" do %>
               <i class="fa-solid fa-house"></i> Accueil
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "#", class: "nav-link" do %>
-              <i class="fa-solid fa-briefcase"></i> Offres
             <% end %>
           </li>
           <li class="nav-item">
