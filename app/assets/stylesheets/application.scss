@@ -13,6 +13,9 @@
 @import "components/offers";
 
 /* Arrière-plan de la page */
+body {
+  background-color: #eee;
+}
 
 .offer-page {
   max-width: 900px;

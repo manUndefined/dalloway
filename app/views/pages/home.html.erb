@@ -25,56 +25,40 @@
   </div>
 </section>
 
-<!-- STATS -->
-<section class="stats-section">
-  <div class="container">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon"><i class="fa-solid fa-briefcase"></i></div>
-        <div class="stat-number"><%= @stats[:offers] %></div>
-        <div class="stat-label">Offres sauvegardées</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon"><i class="fa-solid fa-comments"></i></div>
-        <div class="stat-number"><%= @stats[:interviews] %></div>
-        <div class="stat-label">Entretiens réalisés</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
-        <div class="stat-number"><%= @stats[:users] %></div>
-        <div class="stat-label">Utilisateurs actifs</div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- COMMENT CA MARCHE -->
-<section class="how-section">
+<section class="how-section-v2">
   <div class="container">
-    <div class="how-header">
-      <h2 class="how-title">Comment ça marche ?</h2>
-      <p class="how-subtitle">Préparez vos entretiens en 3 étapes simples</p>
+    <div class="how-v2-header">
+      <span class="how-v2-badge"><i class="fa-solid fa-bolt"></i> Simple & rapide</span>
+      <h2 class="how-v2-title">Comment ça marche ?</h2>
+      <p class="how-v2-subtitle">Préparez vos entretiens en 3 étapes</p>
     </div>
-    <div class="how-grid">
-      <div class="how-step">
-        <div class="how-step-number">1</div>
-        <div class="how-step-icon"><i class="fa-solid fa-link"></i></div>
-        <h3 class="how-step-title">Collez un lien d'offre</h3>
-        <p class="how-step-desc">Copiez l'URL d'une offre depuis HelloWork, Indeed ou LinkedIn. Les champs se remplissent automatiquement.</p>
+    <div class="how-v2-grid">
+      <div class="how-v2-card">
+        <div class="how-v2-number">1</div>
+        <div class="how-v2-icon"><i class="fa-solid fa-plus"></i></div>
+        <h3 class="how-v2-card-title">Ajouter une offre</h3>
+        <p class="how-v2-card-desc">Copiez l'URL d'une offre, les champs se remplissent automatiquement.</p>
       </div>
-      <div class="how-connector"><i class="fa-solid fa-arrow-right"></i></div>
-      <div class="how-step">
-        <div class="how-step-number">2</div>
-        <div class="how-step-icon"><i class="fa-solid fa-robot"></i></div>
-        <h3 class="how-step-title">Lancez l'entretien IA</h3>
-        <p class="how-step-desc">Notre IA analyse l'offre et simule un entretien réaliste adapté au poste et à votre profil.</p>
+      <div class="how-v2-connector">
+        <div class="how-v2-connector-line"></div>
+        <i class="fa-solid fa-chevron-right"></i>
       </div>
-      <div class="how-connector"><i class="fa-solid fa-arrow-right"></i></div>
-      <div class="how-step">
-        <div class="how-step-number">3</div>
-        <div class="how-step-icon"><i class="fa-solid fa-chart-line"></i></div>
-        <h3 class="how-step-title">Progressez</h3>
-        <p class="how-step-desc">Recevez un feedback détaillé, identifiez vos points forts et axes d'amélioration.</p>
+      <div class="how-v2-card">
+        <div class="how-v2-number">2</div>
+        <div class="how-v2-icon"><i class="fa-solid fa-robot"></i></div>
+        <h3 class="how-v2-card-title">Lancez l'entretien IA</h3>
+        <p class="how-v2-card-desc">Allez sur l'offre et demandez une session. Notre IA simule un entretien adapté.</p>
+      </div>
+      <div class="how-v2-connector">
+        <div class="how-v2-connector-line"></div>
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
+      <div class="how-v2-card">
+        <div class="how-v2-number">3</div>
+        <div class="how-v2-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <h3 class="how-v2-card-title">Progressez</h3>
+        <p class="how-v2-card-desc">Recevez un feedback détaillé, identifiez vos points forts et axes d'amélioration.</p>
       </div>
     </div>
   </div>

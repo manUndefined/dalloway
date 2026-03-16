@@ -9,7 +9,7 @@
       <%= link_to offer_chats_path(@offer),
                   data: { turbo_method: :post },
                   class: "offer-show-session-btn" do %>
-        <i class="fa-solid fa-bullseye"></i> Nouvelle session d'entraînement
+        <i class="fa-solid fa-robot"></i> S'entraîner avec l'IA
       <% end %>
     </div>
 
@@ -33,11 +33,6 @@
       <% end %>
     </div>
 
-    <% if @offer.url.present? %>
-      <a href="<%= @offer.url %>" target="_blank" class="offer-show-apply">
-        <i class="fa-solid fa-external-link"></i> Postuler sur le site
-      </a>
-    <% end %>
   </div>
 
   <!-- LAYOUT 2 COLONNES -->
@@ -135,11 +130,6 @@
           <a href="<%= @offer.url %>" target="_blank" class="offer-show-btn-primary offer-show-btn-block">
             <i class="fa-solid fa-external-link"></i> Postuler
           </a>
-          <%= link_to offer_chats_path(@offer),
-                      data: { turbo_method: :post },
-                      class: "offer-show-btn-secondary offer-show-btn-block" do %>
-            <i class="fa-solid fa-bullseye"></i> S'entraîner avec l'IA
-          <% end %>
         </div>
       <% end %>
     </aside>
