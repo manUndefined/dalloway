@@ -30,25 +30,43 @@ class PagesController < ApplicationController
   end
 
   def fetch_hellowork_offers
-    keyword = if params[:keyword].present?
-                params[:keyword]
-              elsif user_signed_in? && current_user.preferred_sector.present?
-                current_user.preferred_sector
-              else
-                "développeur web"
-              end
+    if params[:keyword].present?
+      keyword = params[:keyword]
+    elsif user_signed_in? && current_user.preferred_sector.present?
+      keyword = current_user.preferred_sector
+    else
+      keyword = nil
+    end
+
     city = if params[:city].present?
              params[:city]
            elsif user_signed_in?
              current_user.preferred_city
            end
 
+    contract = params[:contract].presence
     @search_keyword = keyword
     @search_city = city
+    @search_contract = contract
 
-    cache_key = "hellowork_offers/#{keyword}/#{city}"
-    Rails.cache.fetch(cache_key, expires_in: 30.minutes) do
-      HelloworkScraper.call(keyword: keyword, city: city, limit: 8)
+    search_keyword = [keyword, contract].compact.join(" ").presence
+
+    if search_keyword.present?
+      cache_key = "hellowork_offers/#{search_keyword}/#{city}"
+      Rails.cache.fetch(cache_key, expires_in: 30.minutes) do
+        HelloworkScraper.call(keyword: search_keyword, city: city, limit: 8)
+      end
+    else
+      keywords = ["développeur web", "data analyst", "devops", "chef de projet IT", "développeur mobile", "UX designer"]
+      offers = []
+      keywords.each do |kw|
+        cache_key = "hellowork_offers/#{kw}/#{city}"
+        results = Rails.cache.fetch(cache_key, expires_in: 30.minutes) do
+          HelloworkScraper.call(keyword: kw, city: city, limit: 2)
+        end
+        offers.concat(results)
+      end
+      offers.shuffle.first(8)
     end
   end
 end

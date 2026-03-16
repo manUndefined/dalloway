@@ -2,13 +2,9 @@
   <div class="welcome-overlay" data-controller="welcome">
     <div class="welcome-particles" data-welcome-target="particles"></div>
     <div class="welcome-content" data-welcome-target="content">
-      <div class="welcome-avatar-burst">
-        <div class="welcome-ring welcome-ring-1"></div>
-        <div class="welcome-ring welcome-ring-2"></div>
-        <div class="welcome-ring welcome-ring-3"></div>
-        <div class="welcome-avatar-big">
-          <%= current_user.first_name&.first&.upcase || "U" %>
-        </div>
+      <div class="welcome-logo-container">
+        <%= image_tag "logo-dalloway.png", class: "welcome-logo", alt: "Dalloway" %>
+        <div class="welcome-logo-glow"></div>
       </div>
       <h1 class="welcome-title">
         Bienvenue<%= current_user.first_name.present? ? ", #{current_user.first_name}" : "" %> !

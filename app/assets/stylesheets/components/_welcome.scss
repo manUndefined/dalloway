@@ -12,7 +12,7 @@
   background: radial-gradient(ellipse at center, #0a1628 0%, #000 100%);
   opacity: 0;
   transition: opacity 0.4s ease;
-  cursor: pointer;
+  cursor: default;
   overflow: hidden;
 }
 
@@ -91,6 +91,83 @@
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+// Logo with wow entrance
+.welcome-logo-container {
+  position: relative;
+  display: block;
+  margin-bottom: 40px;
+  animation: logoZoomFade 4s ease-in-out 0.2s both;
+}
+
+.welcome-logo {
+  width: 140px;
+  height: 140px;
+  border-radius: 24px;
+  object-fit: cover;
+  position: relative;
+  z-index: 2;
+  box-shadow:
+    0 0 50px rgba($primary, 0.5),
+    0 0 100px rgba(#a855f7, 0.2),
+    0 10px 40px rgba(0, 0, 0, 0.4);
+  animation: logoShine 3s ease-in-out 1.2s infinite alternate;
+  mix-blend-mode: lighten;
+}
+
+.welcome-logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 140px;
+  height: 140px;
+  border-radius: 32px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba($primary, 0.3) 0%, rgba(#a855f7, 0.15) 50%, transparent 70%);
+  z-index: 1;
+  animation: logoGlowPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes logoZoomFade {
+  0% {
+    opacity: 1;
+    transform: scale(0.2);
+  }
+  85% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes logoShine {
+  0% {
+    box-shadow:
+      0 0 50px rgba($primary, 0.5),
+      0 0 100px rgba(#a855f7, 0.2),
+      0 10px 40px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    box-shadow:
+      0 0 70px rgba(#a855f7, 0.6),
+      0 0 140px rgba($primary, 0.3),
+      0 10px 40px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@keyframes logoGlowPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 1;
   }
 }
 
@@ -214,12 +291,8 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 14px;
   backdrop-filter: blur(10px);
-  transition: transform 0.2s, background 0.2s;
-
-  &:hover {
-    transform: translateY(-4px);
-    background: rgba(255, 255, 255, 0.1);
-  }
+  pointer-events: none;
+  cursor: default;
 
   i {
     font-size: 22px;
@@ -237,6 +310,17 @@
 
 // Responsive
 @media (max-width: 600px) {
+  .welcome-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 18px;
+  }
+
+  .welcome-logo-glow {
+    width: 110px;
+    height: 110px;
+  }
+
   .welcome-title {
     font-size: 28px;
   }
