@@ -14,7 +14,8 @@
 
 /* Arrière-plan de la page */
 body {
-  background-color: #eee;
+  background: linear-gradient(180deg, #f0f2f8 0%, #eef0f5 50%, #f5f3fa 100%);
+  background-attachment: fixed;
 }
 
 .offer-page {

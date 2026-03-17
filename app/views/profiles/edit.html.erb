@@ -1,56 +1,79 @@
 <div class="container py-5">
-  <h1 class="mb-4">Modifier mon profil</h1>
+  <div class="profile-header">
+    <h1 class="profile-page-title">Modifier mon profil</h1>
+    <p class="profile-page-subtitle">Mettez à jour vos informations personnelles</p>
+  </div>
 
-  <div class="card p-4 shadow-sm">
-    <%= form_with model: @user, url: profile_path, method: :patch, local: true do |f| %>
-      <div class="mb-3">
-        <%= f.label :first_name, "Prénom", class: "form-label" %>
-        <%= f.text_field :first_name, class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :last_name, "Nom", class: "form-label" %>
-        <%= f.text_field :last_name, class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :city, "Ville", class: "form-label" %>
-        <%= f.text_field :city, class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :domain, "Domaine", class: "form-label" %>
-        <%= f.text_field :domain, class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :job_type, "Type de job", class: "form-label" %>
-        <%= f.text_field :job_type, class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :experience_level, "Niveau d'expérience", class: "form-label" %>
-        <%= f.text_field :experience_level, class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :salary, "Salaire visé", class: "form-label" %>
-        <%= f.number_field :salary, class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :photo, "Photo de profil" %>
-        <%= f.file_field :photo, class: "form-control" %>
+  <div class="profile-card profile-card-edit">
+    <%= form_with model: @user, url: profile_path, method: :patch, local: true, class: "profile-form" do |f| %>
+      <div class="profile-form-grid">
+        <div class="profile-form-field">
+          <label class="profile-form-label">
+            <i class="fa-solid fa-user"></i> Prénom
+          </label>
+          <%= f.text_field :first_name, placeholder: "Votre prénom", class: "profile-form-input" %>
         </div>
 
-        <div class="mb-3">
-        <%= f.label :cv, "CV (PDF)" %>
-        <%= f.file_field :cv, class: "form-control" %>
+        <div class="profile-form-field">
+          <label class="profile-form-label">
+            <i class="fa-solid fa-user-tag"></i> Nom
+          </label>
+          <%= f.text_field :last_name, placeholder: "Votre nom", class: "profile-form-input" %>
         </div>
 
-      <div class="d-flex gap-2">
-        <%= f.submit "Enregistrer", class: "btn btn-primary" %>
-        <%= link_to "Annuler", profile_path, class: "btn btn-secondary" %>
+        <div class="profile-form-field">
+          <label class="profile-form-label">
+            <i class="fa-solid fa-location-dot"></i> Ville
+          </label>
+          <%= f.text_field :city, placeholder: "Paris", class: "profile-form-input" %>
+        </div>
+
+        <div class="profile-form-field">
+          <label class="profile-form-label">
+            <i class="fa-solid fa-layer-group"></i> Domaine
+          </label>
+          <%= f.text_field :domain, placeholder: "Web development", class: "profile-form-input" %>
+        </div>
+
+        <div class="profile-form-field">
+          <label class="profile-form-label">
+            <i class="fa-solid fa-tag"></i> Type de job
+          </label>
+          <%= f.text_field :job_type, placeholder: "CDI, CDD...", class: "profile-form-input" %>
+        </div>
+
+        <div class="profile-form-field">
+          <label class="profile-form-label">
+            <i class="fa-solid fa-chart-line"></i> Niveau d'expérience
+          </label>
+          <%= f.text_field :experience_level, placeholder: "Junior, Senior...", class: "profile-form-input" %>
+        </div>
+
+        <div class="profile-form-field profile-form-field-full">
+          <label class="profile-form-label">
+            <i class="fa-solid fa-euro-sign"></i> Salaire visé
+          </label>
+          <%= f.number_field :salary, placeholder: "45000", class: "profile-form-input" %>
+        </div>
+
+        <div class="profile-form-field">
+          <label class="profile-form-label">
+            <i class="fa-solid fa-camera"></i> Photo de profil
+          </label>
+          <%= f.file_field :photo, class: "profile-form-input profile-form-file" %>
+        </div>
+
+        <div class="profile-form-field">
+          <label class="profile-form-label">
+            <i class="fa-solid fa-file-pdf"></i> CV (PDF)
+          </label>
+          <%= f.file_field :cv, class: "profile-form-input profile-form-file" %>
+        </div>
+      </div>
+
+      <div class="profile-form-actions">
+        <%= f.submit "Enregistrer", class: "profile-btn profile-btn-primary" %>
+        <%= link_to "Annuler", profile_path, class: "profile-btn profile-btn-secondary" %>
       </div>
     <% end %>
   </div>
