@@ -45,36 +45,6 @@
         <% end %>
       </div>
 
-      <!-- Modals suppression -->
-      <% @chats.each do |chat| %>
-        <div class="modal fade" id="deleteChatModal<%= chat.id %>" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content offer-modal-content">
-              <div class="modal-header offer-modal-header">
-                <h5 class="modal-title">Supprimer l'entretien</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body text-center">
-                <div class="delete-modal-icon">
-                  <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-                <p class="delete-modal-text">Supprimer <strong><%= chat.title %></strong> ?</p>
-                <p class="delete-modal-sub">L'historique des messages sera perdu.</p>
-              </div>
-              <div class="modal-footer justify-content-center">
-                <button type="button" class="job-btn job-btn-outline" data-bs-dismiss="modal">Annuler</button>
-                <form action="<%= chat_path(chat) %>" method="post">
-                  <input type="hidden" name="_method" value="delete">
-                  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-                  <button type="submit" class="job-btn job-btn-danger">
-                    <i class="fa-solid fa-trash"></i> Supprimer
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      <% end %>
     <% else %>
       <div class="history-empty">
         <div class="history-empty-icon">
@@ -89,3 +59,31 @@
     <% end %>
   </section>
 </div>
+
+<% if @chats.present? %>
+  <% @chats.each do |chat| %>
+    <div class="modal fade" id="deleteChatModal<%= chat.id %>" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content offer-modal-content">
+          <div class="modal-header offer-modal-header">
+            <h5 class="modal-title">Supprimer l'entretien</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <div class="delete-modal-icon">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <p class="delete-modal-text">Supprimer <strong><%= chat.title %></strong> ?</p>
+            <p class="delete-modal-sub">L'historique des messages sera perdu.</p>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="job-btn job-btn-outline" data-bs-dismiss="modal">Annuler</button>
+            <%= button_to chat_path(chat), method: :delete, class: "job-btn job-btn-danger", data: { turbo: false } do %>
+              <i class="fa-solid fa-trash"></i> Supprimer
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

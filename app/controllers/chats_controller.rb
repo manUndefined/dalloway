@@ -29,6 +29,12 @@ class ChatsController < ApplicationController
     end
   end
 
+  def destroy
+    @chat = current_user.chats.find(params[:id])
+    @chat.destroy
+    redirect_to chats_path, notice: "Entretien supprimé"
+  end
+
   private
 
   def opening_message(offer, user)
@@ -45,11 +51,5 @@ class ChatsController < ApplicationController
 
       Pour commencer, présentez-vous en 4 à 6 phrases comme si vous étiez en entretien.
     TEXT
-  end
-
-  def destroy
-    @chat = current_user.chats.find(params[:id])
-    @chat.destroy
-    redirect_to chats_path, notice: "Entretien supprimé"
   end
 end
