@@ -1,11 +1,11 @@
 <div class="offer-show">
-
   <!-- HEADER -->
   <div class="offer-show-header">
     <div class="offer-show-header-top">
       <%= link_to root_path, class: "offer-show-back" do %>
         <i class="fa-solid fa-arrow-left"></i> Retour aux offres
       <% end %>
+
       <%= link_to offer_chats_path(@offer),
                   data: { turbo_method: :post },
                   class: "offer-show-session-btn" do %>
@@ -17,22 +17,36 @@
 
     <div class="offer-show-badges">
       <% if @offer.city.present? %>
-        <span class="offer-show-badge"><i class="fa-solid fa-location-dot"></i> <%= @offer.city %></span>
+        <span class="offer-show-badge">
+          <i class="fa-solid fa-location-dot"></i> <%= @offer.city %>
+        </span>
       <% end %>
+
       <% if @offer.job_type.present? %>
-        <span class="offer-show-badge"><i class="fa-solid fa-file-contract"></i> <%= @offer.job_type %></span>
+        <span class="offer-show-badge">
+          <i class="fa-solid fa-file-contract"></i> <%= @offer.job_type %>
+        </span>
       <% end %>
+
       <% if @offer.salary.present? %>
-        <span class="offer-show-badge offer-show-badge-salary"><i class="fa-solid fa-euro-sign"></i> <%= number_to_currency(@offer.salary, unit: "€", format: "%n %u", precision: 0) %></span>
+        <span class="offer-show-badge offer-show-badge-salary">
+          <i class="fa-solid fa-euro-sign"></i>
+          <%= number_to_currency(@offer.salary, unit: "€", format: "%n %u", precision: 0) %>
+        </span>
       <% end %>
+
       <% if @offer.experience_level.present? %>
-        <span class="offer-show-badge"><i class="fa-solid fa-chart-simple"></i> <%= @offer.experience_level %></span>
+        <span class="offer-show-badge">
+          <i class="fa-solid fa-chart-simple"></i> <%= @offer.experience_level %>
+        </span>
       <% end %>
+
       <% if @offer.domain.present? %>
-        <span class="offer-show-badge"><i class="fa-solid fa-layer-group"></i> <%= @offer.domain %></span>
+        <span class="offer-show-badge">
+          <i class="fa-solid fa-layer-group"></i> <%= @offer.domain %>
+        </span>
       <% end %>
     </div>
-
   </div>
 
   <!-- LAYOUT 2 COLONNES -->
@@ -42,7 +56,10 @@
     <div class="offer-show-main">
       <% if @offer.description.present? %>
         <div class="offer-show-card">
-          <h2 class="offer-show-section-title"><i class="fa-solid fa-align-left"></i> Description du poste</h2>
+          <h2 class="offer-show-section-title">
+            <i class="fa-solid fa-align-left"></i> Description du poste
+          </h2>
+
           <div class="offer-show-description">
             <%= simple_format(@offer.description) %>
           </div>
@@ -51,39 +68,55 @@
 
       <!-- LETTRE DE MOTIVATION -->
       <div class="offer-show-card">
-        <h2 class="offer-show-section-title"><i class="fa-solid fa-envelope-open-text"></i> Lettre de motivation</h2>
+        <h2 class="offer-show-section-title">
+          <i class="fa-solid fa-envelope-open-text"></i> Lettre de motivation
+        </h2>
 
-        <% if @offer.cover_letters.any? %>
-          <%= form_with model: [@offer.cover_letters.last], local: true do |f| %>
-            <div class="offer-show-field">
-              <label class="offer-show-label">Contenu</label>
-              <%= f.text_area :content, class: "offer-show-textarea" %>
-            </div>
+        <%= turbo_stream_from "cover_letters_#{current_user.id}_offer_#{@offer.id}" %>
+
+        <% if @offer.cover_letters.where(user: current_user).any? %>
+          <% last_cover_letter = @offer.cover_letters.where(user: current_user).last %>
+
+          <%= form_with model: last_cover_letter, local: true do |f| %>
             <div class="offer-show-field">
               <label class="offer-show-label">Des précisions</label>
               <%= f.text_area :details, class: "offer-show-textarea", rows: 3 %>
             </div>
-            <%= f.submit "Mettre à jour la lettre", class: "offer-show-btn-primary" %>
+
+            <%= f.submit "Mettre à jour les précisions", class: "offer-show-btn-primary" %>
           <% end %>
 
-          <%= form_with model: [@offer, @cover_letter], local: true do |f| %>
-            <%= f.submit "Regénérer la lettre", class: "offer-show-btn-secondary" %>
-          <% end %>
+          <div class="offer-show-regenerate-action">
+            <%= form_with model: [@offer, @cover_letter], local: true do |f| %>
+              <%= f.hidden_field :details, value: last_cover_letter.details %>
+              <%= f.submit "Régénérer la lettre", class: "offer-show-btn-secondary" %>
+            <% end %>
+          </div>
 
+          <div id="cover_letter_box">
+            <% if last_cover_letter.content.present? %>
+              <%= render "cover_letters/cover_letter", cover_letter: last_cover_letter %>
+            <% else %>
+              <div class="offer-show-field">
+                <label class="offer-show-label">Lettre générée</label>
+                <div class="offer-show-textarea">
+                  Génération en cours...
+                </div>
+              </div>
+            <% end %>
+          </div>
         <% else %>
           <%= form_with model: [@offer, @cover_letter], local: true do |f| %>
             <div class="offer-show-field">
               <label class="offer-show-label">Des précisions</label>
-              <%= f.text_area :details, class: "offer-show-textarea", rows: 3, placeholder: "Ex: je suis spécialisé en Ruby on Rails avec 3 ans d'expérience..." %>
+              <%= f.text_area :details,
+                    class: "offer-show-textarea",
+                    rows: 3,
+                    placeholder: "Ex : je suis junior en reconversion, je sors du bootcamp Le Wagon, je suis particulièrement motivé par ce poste..." %>
             </div>
+
             <%= f.submit "Générer la lettre", class: "offer-show-btn-primary" %>
           <% end %>
-        <% end %>
-
-        <% if @letter.present? %>
-          <div class="offer-show-letter-result">
-            <%= simple_format(@letter) %>
-          </div>
         <% end %>
       </div>
     </div>
@@ -92,33 +125,48 @@
     <aside class="offer-show-sidebar">
       <div class="offer-show-card">
         <h3 class="offer-show-sidebar-title">Informations</h3>
+
         <% if @offer.city.present? %>
           <div class="offer-show-info-row">
-            <span class="offer-show-info-label"><i class="fa-solid fa-location-dot"></i> Localisation</span>
+            <span class="offer-show-info-label">
+              <i class="fa-solid fa-location-dot"></i> Localisation
+            </span>
             <strong><%= @offer.city %></strong>
           </div>
         <% end %>
+
         <% if @offer.job_type.present? %>
           <div class="offer-show-info-row">
-            <span class="offer-show-info-label"><i class="fa-solid fa-file-contract"></i> Contrat</span>
+            <span class="offer-show-info-label">
+              <i class="fa-solid fa-file-contract"></i> Contrat
+            </span>
             <strong><%= @offer.job_type %></strong>
           </div>
         <% end %>
+
         <% if @offer.salary.present? %>
           <div class="offer-show-info-row">
-            <span class="offer-show-info-label"><i class="fa-solid fa-euro-sign"></i> Salaire</span>
+            <span class="offer-show-info-label">
+              <i class="fa-solid fa-euro-sign"></i> Salaire
+            </span>
             <strong><%= number_to_currency(@offer.salary, unit: "€", format: "%n %u", precision: 0) %></strong>
           </div>
         <% end %>
+
         <% if @offer.experience_level.present? %>
           <div class="offer-show-info-row">
-            <span class="offer-show-info-label"><i class="fa-solid fa-chart-simple"></i> Expérience</span>
+            <span class="offer-show-info-label">
+              <i class="fa-solid fa-chart-simple"></i> Expérience
+            </span>
             <strong><%= @offer.experience_level %></strong>
           </div>
         <% end %>
+
         <% if @offer.domain.present? %>
           <div class="offer-show-info-row">
-            <span class="offer-show-info-label"><i class="fa-solid fa-layer-group"></i> Domaine</span>
+            <span class="offer-show-info-label">
+              <i class="fa-solid fa-layer-group"></i> Domaine
+            </span>
             <strong><%= @offer.domain %></strong>
           </div>
         <% end %>
@@ -133,6 +181,5 @@
         </div>
       <% end %>
     </aside>
-
   </div>
 </div>
