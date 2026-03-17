@@ -309,8 +309,18 @@
 // ---- HOW IT WORKS V2 ----
 .how-section-v2 {
   padding: 70px 0 60px;
-  background: #eee;
+  background: linear-gradient(180deg, #e8eeff 0%, #f3f0ff 50%, #fff 100%);
   position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, $primary, #a855f7, #fab1a0, $green);
+  }
 }
 
 .how-v2-header {
@@ -383,14 +393,29 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #fab1a0, lighten(#fab1a0, 8%));
+  background: linear-gradient(135deg, $primary, lighten($primary, 12%));
   color: #fff;
   font-size: 13px;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(#fab1a0, 0.3);
+  box-shadow: 0 4px 12px rgba($primary, 0.3);
+}
+
+.how-v2-card:nth-child(1) .how-v2-number {
+  background: linear-gradient(135deg, $primary, lighten($primary, 12%));
+  box-shadow: 0 4px 12px rgba($primary, 0.3);
+}
+
+.how-v2-card:nth-child(3) .how-v2-number {
+  background: linear-gradient(135deg, #a855f7, lighten(#a855f7, 10%));
+  box-shadow: 0 4px 12px rgba(#a855f7, 0.3);
+}
+
+.how-v2-card:nth-child(5) .how-v2-number {
+  background: linear-gradient(135deg, $green, lighten($green, 8%));
+  box-shadow: 0 4px 12px rgba($green, 0.3);
 }
 
 .how-v2-icon {
@@ -400,16 +425,30 @@
   width: 56px;
   height: 56px;
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(#fab1a0, 0.15), rgba(#fab1a0, 0.05));
-  color: #fab1a0;
+  background: linear-gradient(135deg, rgba($primary, 0.12), rgba($primary, 0.04));
+  color: $primary;
   font-size: 22px;
   margin-bottom: 18px;
   transition: transform 0.3s, background 0.3s;
 
   .how-v2-card:hover & {
     transform: scale(1.12);
-    background: linear-gradient(135deg, rgba($primary, 0.15), rgba($primary, 0.08));
   }
+}
+
+.how-v2-card:nth-child(1) .how-v2-icon {
+  background: linear-gradient(135deg, rgba($primary, 0.12), rgba($primary, 0.04));
+  color: $primary;
+}
+
+.how-v2-card:nth-child(3) .how-v2-icon {
+  background: linear-gradient(135deg, rgba(#a855f7, 0.12), rgba(#a855f7, 0.04));
+  color: #a855f7;
+}
+
+.how-v2-card:nth-child(5) .how-v2-icon {
+  background: linear-gradient(135deg, rgba($green, 0.12), rgba($green, 0.04));
+  color: $green;
 }
 
 .how-v2-card-title {
@@ -464,6 +503,37 @@
 
 .cta-content {
   text-align: center;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 24px;
+  padding: 44px 36px;
+  box-shadow: 0 8px 32px rgba($primary, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba($primary, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -30%;
+    left: -15%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(#a855f7, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
 }
 
 .cta-title {
@@ -472,12 +542,14 @@
   color: #1f2937;
   margin-bottom: 8px;
   letter-spacing: -0.5px;
+  position: relative;
 }
 
 .cta-desc {
   font-size: 15px;
-  color: #9ca3af;
+  color: #6b7280;
   margin-bottom: 28px;
+  position: relative;
 }
 
 .cta-actions {
@@ -485,6 +557,7 @@
   gap: 14px;
   justify-content: center;
   flex-wrap: wrap;
+  position: relative;
 }
 
 // ---- SEARCH BAR ----
@@ -493,6 +566,10 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 28px;
+  background: linear-gradient(135deg, rgba($primary, 0.03), rgba(#a855f7, 0.03));
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba($primary, 0.08);
 }
 
 .search-fields {
@@ -743,6 +820,11 @@
 // ---- JOBS SECTION ----
 .jobs-section {
   margin-bottom: 60px;
+  padding: 40px 32px 36px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba($primary, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .jobs-header {
@@ -755,6 +837,16 @@
   color: #1f2937;
   margin-bottom: 6px;
   letter-spacing: -0.5px;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, $primary, #a855f7);
+    border-radius: 2px;
+    margin-top: 10px;
+  }
 }
 
 .jobs-subtitle {
@@ -807,9 +899,9 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, $primary, $green);
-    opacity: 0;
-    transition: opacity 0.3s;
+    background: linear-gradient(90deg, $primary, #a855f7);
+    opacity: 1;
+    transition: opacity 0.3s, height 0.3s;
   }
 
   // Soft glow behind card on hover
@@ -836,7 +928,8 @@
     border-color: rgba($primary, 0.3);
 
     &::before {
-      opacity: 1;
+      height: 4px;
+      background: linear-gradient(90deg, $primary, $green);
     }
 
     &::after {
@@ -1005,13 +1098,13 @@
 
 .delete-modal-text {
   font-size: 1.05rem;
-  color: #e2e8f0;
+  color: #1f2937;
   margin-bottom: 4px;
 }
 
 .delete-modal-sub {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: #6b7280;
   margin-bottom: 0;
 }
 
@@ -1059,25 +1152,58 @@
   align-items: center;
   gap: 5px;
   padding: 5px 12px;
-  background: rgba(#f3f4f6, 0.8);
+  background: rgba($primary, 0.06);
   backdrop-filter: blur(4px);
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
-  color: #4b5563;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  color: darken($primary, 10%);
+  border: 1px solid rgba($primary, 0.1);
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 
   i {
     font-size: 10px;
     color: $primary;
-    opacity: 0.7;
+  }
+
+  // Location tag - coral
+  &:has(.fa-location-dot) {
+    background: rgba(#fab1a0, 0.12);
+    color: darken(#fab1a0, 25%);
+    border-color: rgba(#fab1a0, 0.2);
+
+    i { color: #fab1a0; }
+  }
+
+  // Contract tag - purple
+  &:has(.fa-tag) {
+    background: rgba(#a855f7, 0.08);
+    color: darken(#a855f7, 15%);
+    border-color: rgba(#a855f7, 0.15);
+
+    i { color: #a855f7; }
+  }
+
+  // Salary tag - green
+  &:has(.fa-euro-sign) {
+    background: rgba($green, 0.08);
+    color: darken($green, 20%);
+    border-color: rgba($green, 0.15);
+
+    i { color: $green; }
+  }
+
+  // Remote tag - yellow
+  &:has(.fa-house-laptop) {
+    background: rgba($yellow, 0.12);
+    color: darken($yellow, 30%);
+    border-color: rgba($yellow, 0.2);
+
+    i { color: darken($yellow, 10%); }
   }
 
   .job-card:hover & {
-    background: rgba($primary, 0.06);
-    border-color: rgba($primary, 0.1);
-    color: #374151;
+    filter: brightness(0.95);
   }
 }
 
@@ -1085,9 +1211,9 @@
 .jobs-empty {
   text-align: center;
   padding: 60px 20px;
-  background: #fff;
+  background: linear-gradient(135deg, #fff, #f8f6ff);
   border-radius: 16px;
-  border: 2px dashed #e5e7eb;
+  border: 2px dashed rgba(#a855f7, 0.2);
 }
 
 .jobs-empty-icon {

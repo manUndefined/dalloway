@@ -1,97 +1,80 @@
 <div class="container py-5">
-  <div class="mb-5 text-center">
-    <h1 class="fw-bold mb-2">Mon profil</h1>
-    <p class="text-muted mb-0">Gérez vos informations personnelles et vos préférences de recherche</p>
+  <div class="profile-header">
+    <h1 class="profile-page-title">Mon profil</h1>
+    <p class="profile-page-subtitle">Gérez vos informations personnelles et vos préférences de recherche</p>
   </div>
 
-  <div class="row g-4">
-    <div class="col-lg-4">
-      <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-        <div class="text-center">
-          <% if @user.photo.attached? %>
-            <%= image_tag @user.photo, class: "rounded-circle border border-3 border-white shadow", style: "width: 140px; height: 140px; object-fit: cover;" %>
-          <% else %>
-            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3"
-                 style="width: 140px; height: 140px; font-size: 48px;">
-              👤
-            </div>
-          <% end %>
-
-          <h3 class="fw-bold mb-1">
-            <%= [@user.first_name, @user.last_name].compact.join(" ").presence || "Nom non renseigné" %>
-          </h3>
-          <p class="text-muted mb-3"><%= @user.email %></p>
-
-          <% if @user.cv.attached? %>
-            <%= link_to "Voir mon CV", url_for(@user.cv), target: "_blank", class: "btn btn-outline-primary rounded-pill px-4" %>
-          <% else %>
-            <p class="text-muted small mb-0">Aucun CV ajouté</p>
-          <% end %>
-        </div>
+  <div class="profile-grid">
+    <!-- CARD AVATAR -->
+    <div class="profile-card profile-card-avatar">
+      <div class="profile-avatar-wrap">
+        <% if @user.photo.attached? %>
+          <%= image_tag @user.photo, class: "profile-avatar-img" %>
+        <% else %>
+          <div class="profile-avatar-placeholder">
+            <i class="fa-solid fa-user"></i>
+          </div>
+        <% end %>
       </div>
+      <h3 class="profile-name">
+        <%= [@user.first_name, @user.last_name].compact.join(" ").presence || "Nom non renseigné" %>
+      </h3>
+      <p class="profile-email"><%= @user.email %></p>
+      <% if @user.cv.attached? %>
+        <%= link_to url_for(@user.cv), target: "_blank", class: "profile-cv-btn" do %>
+          <i class="fa-solid fa-file-pdf"></i> Voir mon CV
+        <% end %>
+      <% else %>
+        <p class="profile-no-cv"><i class="fa-solid fa-file-circle-xmark"></i> Aucun CV ajouté</p>
+      <% end %>
     </div>
 
-    <div class="col-lg-8">
-      <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <div>
-            <h4 class="fw-bold mb-1">Préférences professionnelles</h4>
-            <p class="text-muted mb-0">Ces informations aideront Dalloway à personnaliser votre expérience</p>
-          </div>
-          <%= link_to "Modifier", edit_profile_path, class: "btn btn-primary rounded-pill px-4" %>
+    <!-- CARD INFOS -->
+    <div class="profile-card profile-card-infos">
+      <div class="profile-infos-header">
+        <div>
+          <h4 class="profile-infos-title">Préférences professionnelles</h4>
+          <p class="profile-infos-subtitle">Ces informations aideront Dalloway à personnaliser votre expérience</p>
+        </div>
+        <%= link_to edit_profile_path, class: "profile-edit-btn" do %>
+          <i class="fa-solid fa-pen"></i> Modifier
+        <% end %>
+      </div>
+
+      <div class="profile-fields-grid">
+        <div class="profile-field">
+          <span class="profile-field-label"><i class="fa-solid fa-user"></i> Prénom</span>
+          <span class="profile-field-value"><%= @user.first_name.presence || "Non renseigné" %></span>
         </div>
 
-        <div class="row g-3">
-          <div class="col-md-6">
-            <div class="bg-light rounded-4 p-3 h-100">
-              <p class="text-muted small mb-1">Prénom</p>
-              <p class="fw-semibold mb-0"><%= @user.first_name.presence || "Non renseigné" %></p>
-            </div>
-          </div>
+        <div class="profile-field">
+          <span class="profile-field-label"><i class="fa-solid fa-user-tag"></i> Nom</span>
+          <span class="profile-field-value"><%= @user.last_name.presence || "Non renseigné" %></span>
+        </div>
 
-          <div class="col-md-6">
-            <div class="bg-light rounded-4 p-3 h-100">
-              <p class="text-muted small mb-1">Nom</p>
-              <p class="fw-semibold mb-0"><%= @user.last_name.presence || "Non renseigné" %></p>
-            </div>
-          </div>
+        <div class="profile-field">
+          <span class="profile-field-label"><i class="fa-solid fa-location-dot"></i> Ville</span>
+          <span class="profile-field-value"><%= @user.city.presence || "Non renseignée" %></span>
+        </div>
 
-          <div class="col-md-6">
-            <div class="bg-light rounded-4 p-3 h-100">
-              <p class="text-muted small mb-1">Ville</p>
-              <p class="fw-semibold mb-0"><%= @user.city.presence || "Non renseignée" %></p>
-            </div>
-          </div>
+        <div class="profile-field">
+          <span class="profile-field-label"><i class="fa-solid fa-layer-group"></i> Domaine</span>
+          <span class="profile-field-value"><%= @user.domain.presence || "Non renseigné" %></span>
+        </div>
 
-          <div class="col-md-6">
-            <div class="bg-light rounded-4 p-3 h-100">
-              <p class="text-muted small mb-1">Domaine</p>
-              <p class="fw-semibold mb-0"><%= @user.domain.presence || "Non renseigné" %></p>
-            </div>
-          </div>
+        <div class="profile-field">
+          <span class="profile-field-label"><i class="fa-solid fa-tag"></i> Type de job</span>
+          <span class="profile-field-value"><%= @user.job_type.presence || "Non renseigné" %></span>
+        </div>
 
-          <div class="col-md-6">
-            <div class="bg-light rounded-4 p-3 h-100">
-              <p class="text-muted small mb-1">Type de job</p>
-              <p class="fw-semibold mb-0"><%= @user.job_type.presence || "Non renseigné" %></p>
-            </div>
-          </div>
+        <div class="profile-field">
+          <span class="profile-field-label"><i class="fa-solid fa-chart-line"></i> Niveau d'expérience</span>
+          <span class="profile-field-value"><%= @user.experience_level.presence || "Non renseigné" %></span>
+        </div>
 
-          <div class="col-md-6">
-            <div class="bg-light rounded-4 p-3 h-100">
-              <p class="text-muted small mb-1">Niveau d'expérience</p>
-              <p class="fw-semibold mb-0"><%= @user.experience_level.presence || "Non renseigné" %></p>
-            </div>
-          </div>
-
-          <div class="col-md-12">
-            <div class="bg-light rounded-4 p-3 h-100">
-              <p class="text-muted small mb-1">Salaire visé</p>
-              <p class="fw-semibold mb-0">
-                <%= @user.salary.present? ? "#{@user.salary} €" : "Non renseigné" %>
-              </p>
-            </div>
-          </div>
+        <div class="profile-field profile-field-full">
+          <span class="profile-field-label"><i class="fa-solid fa-euro-sign"></i> Salaire visé</span>
+          <span class="profile-field-value"><%= @user.salary.present? ? "#{@user.salary} €" : "Non renseigné" %></span>
         </div>
       </div>
     </div>
