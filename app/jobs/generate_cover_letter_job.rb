@@ -1,12 +1,25 @@
 class GenerateCoverLetterJob < ApplicationJob
   queue_as :default
 
-  def perform(cover_letter_id)
-    cover_letter = CoverLetter.find(cover_letter_id)
-    user = cover_letter.user
-    offer = cover_letter.offer
-    details = cover_letter.details
+  attr_reader :user, :offer, :cover_letter, :prompt, :response
 
+  def perform(cover_letter)
+    @cover_letter = cover_letter
+    p @cover_letter
+    @user = cover_letter.user
+    p @user
+    @offer = cover_letter.offer
+    p @offer
+
+    write_prompts
+    call_llm
+
+    cover_letter.update!(content: response.content)
+
+    broadcast_response
+  end
+
+  def write_prompts
     cv_text = CvReader.extract_text(user.cv)
 
     profile_context = <<~TEXT
@@ -31,7 +44,7 @@ class GenerateCoverLetterJob < ApplicationJob
 
     details_context = <<~TEXT
       PRÉCISIONS AJOUTÉES PAR LE CANDIDAT :
-      #{details.presence || 'Aucune précision supplémentaire'}
+      #{cover_letter.details.presence || 'Aucune précision supplémentaire'}
     TEXT
 
     cv_context = <<~TEXT
@@ -39,7 +52,7 @@ class GenerateCoverLetterJob < ApplicationJob
       #{cv_text}
     TEXT
 
-    prompt = <<~PROMPT
+    @prompt = <<~PROMPT
       Tu es un expert en rédaction de lettres de motivation modernes, crédibles et professionnelles.
 
       Ta mission est de rédiger une lettre de motivation courte à moyenne, personnalisée et naturelle, à partir :
@@ -95,14 +108,18 @@ class GenerateCoverLetterJob < ApplicationJob
 
       #{cv_context}
     PROMPT
+  end
 
+  def call_llm
+    puts "CALL LLM"
     chat = RubyLLM.chat
     chat.with_instructions(prompt)
 
-    response = chat.ask("Rédige maintenant la lettre de motivation complète.")
+    @response = chat.ask("Rédige maintenant la lettre de motivation complète.")
+  end
 
-    cover_letter.update!(content: response.content)
-
+  def broadcast_response
+    puts "broadcast_response"
     Turbo::StreamsChannel.broadcast_replace_to(
       "cover_letters_#{user.id}_offer_#{offer.id}",
       target: "cover_letter_box",
