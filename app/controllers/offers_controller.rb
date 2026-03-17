@@ -36,7 +36,7 @@ class OffersController < ApplicationController
       description: data[:description].presence || params[:title] || "Description non disponible",
       city: params[:city].presence || data[:city],
       domain: params[:domain].presence || data[:domain],
-      salary: data[:salary] || params[:salary],
+      salary: sanitize_salary(data[:salary]) || parse_salary(params[:salary]),
       job_type: params[:job_type].presence || data[:job_type],
       experience_level: data[:experience_level],
       source: "hellowork"
@@ -108,6 +108,19 @@ class OffersController < ApplicationController
 
       Pour commencer, présentez-vous en 4 à 6 phrases comme si vous étiez en entretien.
     TEXT
+  end
+
+  def sanitize_salary(value)
+    return nil if value.nil?
+    num = value.to_i
+    num > 0 && num <= 200_000 ? num : nil
+  end
+
+  def parse_salary(salary_str)
+    return nil if salary_str.blank?
+    numbers = salary_str.scan(/\d[\d\s]*/).map { |n| n.gsub(/\s/, "").to_i }
+    return nil if numbers.empty?
+    numbers.max <= 200_000 ? numbers.first : nil
   end
 
   def guess_domain(title)

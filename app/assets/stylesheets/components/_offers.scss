@@ -21,8 +21,8 @@ body {
   border-radius: 16px;
   padding: 28px 32px;
   margin-bottom: 28px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.03);
+  border: 2px solid rgba($primary, 0.15);
+  box-shadow: 0 4px 20px rgba($primary, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .offer-show-header-top {
@@ -178,8 +178,8 @@ body {
   background: #fff;
   border-radius: 16px;
   padding: 28px 32px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.03);
+  border: 2px solid rgba($primary, 0.15);
+  box-shadow: 0 4px 20px rgba($primary, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
   margin-bottom: 24px;
 }
 

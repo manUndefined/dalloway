@@ -48,23 +48,25 @@
 
 // Nav links
 .navbar-dalloway .nav-link {
-  color: #4b5563;
+  color: #1f2937;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   padding: 8px 16px !important;
   border-radius: 8px;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.2s, background 0.2s;
   display: flex;
   align-items: center;
   gap: 6px;
+  letter-spacing: 0.2px;
 
   i {
     font-size: 13px;
+    color: $primary;
   }
 
   &:hover {
     color: $primary;
-    background: rgba($primary, 0.06);
+    background: rgba($primary, 0.08);
   }
 }
 

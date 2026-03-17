@@ -218,7 +218,7 @@
 
 .hero-desc {
   font-size: 18px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   max-width: 520px;
   margin: 0 auto;
   line-height: 1.7;
@@ -358,7 +358,7 @@
 }
 
 .how-v2-card {
-  background: #f3f4f6;
+  background: #fff;
   border-radius: 20px;
   padding: 36px 28px 32px;
   text-align: center;
@@ -383,14 +383,14 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, $primary, lighten($primary, 12%));
+  background: linear-gradient(135deg, #fab1a0, lighten(#fab1a0, 8%));
   color: #fff;
   font-size: 13px;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba($primary, 0.3);
+  box-shadow: 0 4px 12px rgba(#fab1a0, 0.3);
 }
 
 .how-v2-icon {
@@ -400,8 +400,8 @@
   width: 56px;
   height: 56px;
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba($primary, 0.1), rgba($primary, 0.04));
-  color: $primary;
+  background: linear-gradient(135deg, rgba(#fab1a0, 0.15), rgba(#fab1a0, 0.05));
+  color: #fab1a0;
   font-size: 22px;
   margin-bottom: 18px;
   transition: transform 0.3s, background 0.3s;

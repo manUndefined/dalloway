@@ -16,8 +16,7 @@
         <i class="fa-solid fa-wand-magic-sparkles"></i> Propulsé par l'IA
       </span>
       <h1 class="hero-title">
-        <span class="hero-title-line hero-anim-1">Décrochez votre</span>
-        <span class="hero-title-line hero-anim-2">prochain job</span>
+        <span class="hero-title-line hero-anim-1">Votre prochain job</span>
         <span class="hero-title-line hero-anim-3"><span class="hero-highlight">en quelques clics</span></span>
       </h1>
       <p class="hero-desc">Entraînez-vous aux entretiens avec une IA qui s'adapte à votre CV et à l'offre ciblée.</p>
@@ -198,6 +197,10 @@
           <i class="fa-solid fa-location-dot"></i>
           <%= f.text_field :city, value: @search_city, placeholder: "Ville", class: "search-input" %>
         </div>
+        <div class="search-field">
+          <i class="fa-solid fa-file-contract"></i>
+          <%= f.select :contract, options_for_select(["CDI", "CDD", "Freelance", "Stage", "Alternance", "Intérim"], @search_contract), { include_blank: "Type de contrat" }, class: "search-input" %>
+        </div>
       </div>
       <%= f.submit "Rechercher", class: "search-btn" %>
     <% end %>
@@ -241,10 +244,10 @@
     <% else %>
       <div class="jobs-empty">
         <div class="jobs-empty-icon">
-          <i class="fa-solid fa-globe"></i>
+          <i class="fa-solid fa-filter-circle-xmark"></i>
         </div>
-        <p>Impossible de charger les offres HelloWork pour le moment.</p>
-        <span>Réessayez dans quelques instants.</span>
+        <p>Aucune offre ne correspond à vos critères.</p>
+        <span>Essayez avec d'autres filtres ou <%= link_to "réinitialisez la recherche", root_path %>.</span>
       </div>
     <% end %>
   </section>
