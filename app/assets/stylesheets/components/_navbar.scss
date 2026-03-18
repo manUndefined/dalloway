@@ -28,10 +28,15 @@
 }
 
 .navbar-logo-img {
-  max-height: 50px;
+  height: 55px;
   width: auto;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: center;
   display: block;
+  clip-path: inset(20% 5% 25% 5%);
+  margin: -15px -5px;
+  transform: scale(2.1);
+  transform-origin: center;
 }
 
 // Toggler
