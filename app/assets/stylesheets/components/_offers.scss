@@ -124,24 +124,61 @@ body {
   align-items: center;
   gap: 6px;
   padding: 6px 14px;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background: rgba($primary, 0.06);
+  border: 1px solid rgba($primary, 0.1);
   border-radius: 20px;
   font-size: 13px;
-  font-weight: 500;
-  color: #475569;
+  font-weight: 600;
+  color: darken($primary, 10%);
 
   i {
     font-size: 11px;
     color: $primary;
   }
 
-  &.offer-show-badge-salary {
-    background: #ecfdf5;
-    border-color: #d1fae5;
-    color: #065f46;
+  // Location - coral
+  &:has(.fa-location-dot) {
+    background: rgba(#fab1a0, 0.12);
+    color: darken(#fab1a0, 25%);
+    border-color: rgba(#fab1a0, 0.2);
 
-    i { color: #059669; }
+    i { color: #fab1a0; }
+  }
+
+  // Contract - purple
+  &:has(.fa-file-contract) {
+    background: rgba(#a855f7, 0.08);
+    color: darken(#a855f7, 15%);
+    border-color: rgba(#a855f7, 0.15);
+
+    i { color: #a855f7; }
+  }
+
+  // Salary - green
+  &.offer-show-badge-salary {
+    background: rgba($green, 0.08);
+    color: darken($green, 20%);
+    border-color: rgba($green, 0.15);
+
+    i { color: $green; }
+  }
+
+  // Experience - yellow
+  &:has(.fa-chart-simple) {
+    background: rgba($yellow, 0.12);
+    color: darken($yellow, 30%);
+    border-color: rgba($yellow, 0.2);
+
+    i { color: darken($yellow, 10%); }
+  }
+
+  // Domain - blue
+  &:has(.fa-layer-group) {
+    background: rgba($primary, 0.06);
+    color: darken($primary, 10%);
+    border-color: rgba($primary, 0.1);
+
+    i { color: $primary; }
   }
 }
 
@@ -278,8 +315,13 @@ body {
 
   i {
     font-size: 11px;
-    color: #94a3b8;
   }
+
+  .fa-location-dot { color: #fab1a0; }
+  .fa-file-contract { color: #a855f7; }
+  .fa-euro-sign { color: $green; }
+  .fa-chart-simple { color: darken($yellow, 10%); }
+  .fa-layer-group { color: $primary; }
 }
 
 // ---- SIDEBAR CTA ----

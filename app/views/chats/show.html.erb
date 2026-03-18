@@ -1,8 +1,8 @@
 <div class="chat-page" data-controller="chat">
   <div class="chat-shell">
     <div class="chat-header">
-      <%= link_to chats_path, class: "chat-back" do %>
-        <i class="fa-solid fa-arrow-left"></i> Historique
+      <%= link_to offer_path(@chat.offer), class: "chat-back", data: { turbo: false } do %>
+        <i class="fa-solid fa-arrow-left"></i> Retour à l'offre
       <% end %>
 
       <div class="chat-header-info">

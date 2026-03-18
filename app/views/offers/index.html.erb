@@ -1,9 +1,51 @@
-<h1>Liste des offres</h1>
+<div class="container">
+  <section class="jobs-section">
+    <div class="jobs-header">
+      <h2 class="jobs-title">Toutes vos offres</h2>
+      <p class="jobs-subtitle"><%= @offers.size %> offre<%= @offers.size > 1 ? "s" : "" %> sauvegardée<%= @offers.size > 1 ? "s" : "" %></p>
+    </div>
 
-<ul>
-  <% @offers.each do |offer| %>
-    <li>
-      <%= link_to offer.title, offer_path(offer) %>
-    </li>
-  <% end %>
-</ul>
+    <% if @offers.present? %>
+      <div class="jobs-grid">
+        <% @offers.each do |offer| %>
+          <div class="job-card job-card-clickable" onclick="window.location='<%= offer_path(offer) %>'">
+            <div class="job-card-top">
+              <div class="job-card-icon">
+                <i class="fa-solid fa-briefcase"></i>
+              </div>
+              <h3 class="job-card-title"><%= offer.title %></h3>
+              <% if offer.description.present? %>
+                <p class="job-card-desc"><%= truncate(offer.description, length: 120) %></p>
+              <% end %>
+              <div class="job-card-tags">
+                <% if offer.city.present? %>
+                  <span class="job-tag"><i class="fa-solid fa-location-dot"></i> <%= offer.city %></span>
+                <% end %>
+                <% if offer.job_type.present? %>
+                  <span class="job-tag"><i class="fa-solid fa-tag"></i> <%= offer.job_type %></span>
+                <% end %>
+                <% if offer.experience_level.present? %>
+                  <span class="job-tag"><i class="fa-solid fa-chart-line"></i> <%= offer.experience_level %></span>
+                <% end %>
+                <% if offer.salary.present? %>
+                  <span class="job-tag"><i class="fa-solid fa-euro-sign"></i> <%= number_to_currency(offer.salary, unit: "€", format: "%n %u", precision: 0) %></span>
+                <% end %>
+                <% if offer.domain.present? %>
+                  <span class="job-tag"><i class="fa-solid fa-layer-group"></i> <%= offer.domain %></span>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="jobs-empty">
+        <div class="jobs-empty-icon">
+          <i class="fa-solid fa-folder-open"></i>
+        </div>
+        <p>Aucune offre sauvegardée</p>
+        <span>Ajoutez des offres depuis la page d'accueil</span>
+      </div>
+    <% end %>
+  </section>
+</div>
