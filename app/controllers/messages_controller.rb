@@ -6,7 +6,7 @@ class MessagesController < ApplicationController
     @message.role = "user"
 
     if @message.save
-      assistant_reply = generate_assistant_reply(@chat)
+      assistant_reply = handle_interview_flow(@chat)
 
       @assistant_message = @chat.messages.create!(
         role: "assistant",
@@ -28,7 +28,159 @@ class MessagesController < ApplicationController
     params.require(:message).permit(:content)
   end
 
+  def handle_interview_flow(chat)
+    last_user_message = chat.messages.where(role: "user").order(:created_at).last&.content.to_s.strip.downcase
+    last_assistant_message = chat.messages.where(role: "assistant").order(:created_at).last&.content.to_s
+
+    if continuation_prompt?(last_assistant_message)
+      return generate_final_feedback(chat) if negative_answer?(last_user_message)
+      return generate_assistant_reply(chat) if positive_answer?(last_user_message)
+
+      return "Merci de répondre simplement par oui ou non : souhaitez-vous continuer l’entretien ?"
+    end
+
+    return generate_mid_interview_feedback(chat) if should_offer_mid_interview_feedback?(chat)
+
+    generate_assistant_reply(chat)
+  end
+
+  def should_offer_mid_interview_feedback?(chat)
+    user_messages_count = chat.messages.where(role: "user").count
+    last_assistant_message = chat.messages.where(role: "assistant").order(:created_at).last&.content.to_s
+
+    user_messages_count.positive? &&
+      (user_messages_count % 3).zero? &&
+      !continuation_prompt?(last_assistant_message)
+  end
+
+  def continuation_prompt?(message)
+    message.downcase.include?("souhaitez-vous continuer")
+  end
+
+  def positive_answer?(message)
+    message.match?(/\A(oui|oui\.|oui!|oui !)\z/i)
+  end
+
+  def negative_answer?(message)
+    message.match?(/\A(non|non\.|non!|non !)\z/i)
+  end
+
+  def generate_mid_interview_feedback(chat)
+    user_messages = chat.messages
+                        .where(role: "user")
+                        .order(:created_at)
+                        .last(3)
+                        .map(&:content)
+                        .join("\n\n")
+
+    feedback_prompt = <<~PROMPT
+      Tu es Dalloway IA, un coach d'entretien honnête, professionnel et utile.
+
+      Tu dois produire un mini feedback intermédiaire basé uniquement sur les 3 dernières réponses du candidat.
+
+      CONSIGNES IMPORTANTES :
+      - sois honnête
+      - n'invente rien
+      - si les réponses sont trop courtes, trop vagues ou peu exploitables, dis-le clairement
+      - si les réponses sont bonnes, dis-le aussi honnêtement
+      - donne un retour bref, utile et crédible
+      - réponds uniquement en français
+      - reste concis : 3 à 5 lignes maximum
+      - termine obligatoirement par cette phrase exacte :
+        "Souhaitez-vous continuer l’entretien ? (oui/non)"
+
+      RÉPONSES DU CANDIDAT :
+      #{user_messages}
+    PROMPT
+
+    chat_llm = RubyLLM.chat
+    chat_llm.with_instructions(feedback_prompt)
+
+    response = chat_llm.ask("Fais maintenant un mini feedback intermédiaire honnête sur ces réponses.")
+    response.content
+  end
+
   def generate_assistant_reply(chat)
+    system_prompt = interview_system_prompt(chat)
+
+    chat_llm = RubyLLM.chat
+    chat_llm.with_instructions(system_prompt)
+
+    add_chat_history(chat_llm, chat)
+
+    response = chat_llm.ask("Continue l'entretien en tenant compte du dernier message utilisateur.")
+    response.content
+  end
+
+  def generate_final_feedback(chat)
+    user = chat.user
+    offer = chat.offer
+    cv_text = CvReader.extract_text(user.cv)
+
+    feedback_prompt = <<~PROMPT
+      Tu es Dalloway IA, un coach en préparation d'entretien.
+
+      Tu dois maintenant produire un bilan final de l'entretien à partir :
+      - du profil utilisateur
+      - de l'offre visée
+      - du CV
+      - de l'historique complet de l'échange
+
+      CONTEXTE UTILISATEUR :
+      - Prénom : #{user.first_name.presence || 'Non renseigné'}
+      - Nom : #{user.last_name.presence || 'Non renseigné'}
+      - Ville : #{user.city.presence || 'Non renseigné'}
+      - Domaine : #{user.domain.presence || 'Non renseigné'}
+      - Type de job recherché : #{user.job_type.presence || 'Non renseigné'}
+      - Niveau d'expérience : #{user.experience_level.presence || 'Non renseigné'}
+      - Salaire visé : #{user.salary.presence || 'Non renseigné'}
+
+      OFFRE VISÉE :
+      - Titre : #{offer.title.presence || 'Non renseigné'}
+      - Description : #{offer.description.presence || 'Non renseigné'}
+      - Ville : #{offer.city.presence || 'Non renseigné'}
+      - Entreprise : #{offer.respond_to?(:company_name) ? offer.company_name.presence || 'Non renseigné' : 'Non renseigné'}
+
+      CV DU CANDIDAT :
+      #{cv_text}
+
+      CONSIGNE DE RÉPONSE :
+      - réponds uniquement en français
+      - adopte un ton professionnel, bienveillant et utile
+      - fais un vrai bilan final de l'entretien
+      - donne un score global sur 10
+      - structure impérativement la réponse comme ceci :
+
+      Merci pour cet entraînement.
+
+      Score global : X/10
+
+      Points forts :
+      - ...
+      - ...
+
+      Axes d'amélioration :
+      - ...
+      - ...
+
+      Conseil prioritaire pour le prochain entretien :
+      ...
+
+      - base-toi sur ce que le candidat a réellement dit
+      - n'invente pas d'expérience
+      - reste concret et concis
+    PROMPT
+
+    chat_llm = RubyLLM.chat
+    chat_llm.with_instructions(feedback_prompt)
+
+    add_chat_history(chat_llm, chat)
+
+    response = chat_llm.ask("Fais maintenant le bilan final complet de cet entretien.")
+    response.content
+  end
+
+  def interview_system_prompt(chat)
     offer = chat.offer
     user = chat.user
     cv_text = CvReader.extract_text(user.cv)
@@ -56,7 +208,8 @@ class MessagesController < ApplicationController
       CV DU CANDIDAT :
       #{cv_text}
     TEXT
-    system_prompt = <<~PROMPT
+
+    <<~PROMPT
       Tu es Dalloway IA, un recruteur-coach spécialisé dans la préparation aux entretiens d'embauche.
 
       TON RÔLE :
@@ -107,10 +260,9 @@ class MessagesController < ApplicationController
       - n'invente pas d'expérience que l'utilisateur n'a pas mentionnée
       - quand c'est pertinent, cite ou reformule un élément du CV sans recopier tout le document
     PROMPT
+  end
 
-    chat_llm = RubyLLM.chat
-    chat_llm.with_instructions(system_prompt)
-
+  def add_chat_history(chat_llm, chat)
     chat.messages.order(:created_at).each do |message|
       if message.role == "assistant"
         chat_llm.add_message(role: "assistant", content: message.content)
@@ -118,8 +270,5 @@ class MessagesController < ApplicationController
         chat_llm.add_message(role: "user", content: message.content)
       end
     end
-
-    response = chat_llm.ask("Continue l'entretien en tenant compte du dernier message utilisateur.")
-    response.content
   end
 end

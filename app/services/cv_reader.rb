@@ -10,7 +10,7 @@ class CvReader
     text = ""
 
     reader.pages.each do |page|
-      text += page.text + "\n"
+      text += "#{page.text} \n"
     end
 
     text.truncate(4000)
