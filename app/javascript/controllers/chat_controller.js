@@ -8,6 +8,18 @@ export default class extends Controller {
     setTimeout(() => {
       this.scrollToBottom()
     }, 50)
+
+    const textarea = this.formTarget.querySelector("textarea")
+    if (textarea) {
+      textarea.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault()
+          if (textarea.value.trim().length > 0) {
+            this.formTarget.requestSubmit()
+          }
+        }
+      })
+    }
   }
 
   submitting() {
