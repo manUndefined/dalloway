@@ -59,12 +59,12 @@
   color: inherit;
   flex: 1;
   min-width: 0;
-  box-shadow: 0 4px 16px rgba(#2563EB, 0.06), 0 1px 4px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 16px rgba(30, 30, 30, 0.1), 0 1px 4px rgba(30, 30, 30, 0.06);
   position: relative;
   transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
 
   &:hover {
-    box-shadow: 0 12px 36px rgba(#2563EB, 0.15), 0 4px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 12px 36px rgba(30, 30, 30, 0.15), 0 4px 12px rgba(30, 30, 30, 0.08);
     transform: translateY(-3px);
     border-color: rgba(#7C3AED, 0.2);
     color: inherit;
@@ -209,7 +209,7 @@
   background: #fff;
   border: 2px solid rgba($primary, 0.15);
   border-radius: 24px;
-  box-shadow: 0 4px 20px rgba($primary, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(30, 30, 30, 0.12), 0 2px 8px rgba(30, 30, 30, 0.08);
 }
 
 .history-empty-icon {

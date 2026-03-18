@@ -376,12 +376,12 @@
   flex: 1;
   position: relative;
   border: 2px solid rgba($primary, 0.15);
-  box-shadow: 0 4px 20px rgba($primary, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(30, 30, 30, 0.12), 0 2px 8px rgba(30, 30, 30, 0.08);
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s;
 
   &:hover {
     transform: translateY(-6px);
-    box-shadow: 0 12px 40px rgba($primary, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 12px 40px rgba(30, 30, 30, 0.12), 0 4px 12px rgba(30, 30, 30, 0.08);
     border-color: rgba($primary, 0.2);
   }
 }
@@ -510,7 +510,7 @@
   border: 2px solid rgba($primary, 0.15);
   border-radius: 24px;
   padding: 44px 36px;
-  box-shadow: 0 4px 20px rgba($primary, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(30, 30, 30, 0.12), 0 2px 8px rgba(30, 30, 30, 0.08);
   position: relative;
   overflow: hidden;
 
@@ -825,7 +825,7 @@
   background: #fff;
   border: 2px solid rgba($primary, 0.15);
   border-radius: 24px;
-  box-shadow: 0 4px 20px rgba($primary, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(30, 30, 30, 0.12), 0 2px 8px rgba(30, 30, 30, 0.08);
 }
 
 .jobs-header {
@@ -874,7 +874,7 @@
   -webkit-backdrop-filter: blur(16px);
   border-radius: 20px;
   border: 2px solid rgba($primary, 0.15);
-  box-shadow: 0 6px 28px rgba($primary, 0.25), 0 3px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 28px rgba(30, 30, 30, 0.22), 0 3px 12px rgba(30, 30, 30, 0.14);
   padding: 28px;
   display: flex;
   flex-direction: column;
@@ -924,9 +924,9 @@
   &:hover {
     transform: translateY(-6px);
     box-shadow:
-      0 16px 48px rgba($primary, 0.25),
-      0 6px 16px rgba(0, 0, 0, 0.1);
-    border-color: rgba($primary, 0.3);
+      0 16px 48px rgba(30, 30, 30, 0.28),
+      0 6px 16px rgba(30, 30, 30, 0.15);
+    border-color: rgba(30, 30, 30, 0.2);
 
     &::before {
       height: 4px;
