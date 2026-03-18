@@ -5,18 +5,28 @@ class GenerateCoverLetterJob < ApplicationJob
 
   def perform(cover_letter)
     @cover_letter = cover_letter
-    p @cover_letter
     @user = cover_letter.user
-    p @user
     @offer = cover_letter.offer
-    p @offer
 
-    write_prompts
-    call_llm
+    begin
+      write_prompts
+      call_llm
 
-    cover_letter.update!(content: response.content)
+      @cover_letter.update!(content: response.content)
 
-    broadcast_response
+      broadcast_response
+    rescue StandardError => e
+      @cover_letter.update!(
+        content: "❌ Une erreur est survenue lors de la génération. Merci de réessayer."
+      )
+
+      Turbo::StreamsChannel.broadcast_replace_to(
+        "cover_letters_#{user.id}_offer_#{offer.id}",
+        target: "cover_letter_box",
+        partial: "cover_letters/cover_letter",
+        locals: { cover_letter: @cover_letter }
+      )
+    end
   end
 
   def write_prompts
@@ -124,7 +134,7 @@ class GenerateCoverLetterJob < ApplicationJob
       "cover_letters_#{user.id}_offer_#{offer.id}",
       target: "cover_letter_box",
       partial: "cover_letters/cover_letter",
-      locals: { cover_letter: cover_letter }
+      locals: { cover_letter: @cover_letter }
     )
   end
 end
