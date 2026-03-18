@@ -6,9 +6,7 @@
       <%= link_to root_path, class: "offer-show-back" do %>
         <i class="fa-solid fa-arrow-left"></i> Retour aux offres
       <% end %>
-      <%= link_to offer_chats_path(@offer),
-                  data: { turbo_method: :post },
-                  class: "offer-show-session-btn" do %>
+      <%= button_to offer_chats_path(@offer), method: :post, class: "offer-show-session-btn", data: { turbo: false } do %>
         <i class="fa-solid fa-robot"></i> S'entraîner avec l'IA
       <% end %>
     </div>
