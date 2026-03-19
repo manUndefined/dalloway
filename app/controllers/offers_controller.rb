@@ -62,7 +62,7 @@ class OffersController < ApplicationController
   end
 
   def index
-    @offers = Offer.all
+    @offers = Offer.joins(:chats).where(chats: { user_id: current_user.id }).distinct.order(created_at: :desc)
   end
 
   def show
