@@ -26,5 +26,9 @@
     <%= render "shared/flashes" %>
 
     <%= yield %>
+
+    <% if user_signed_in? %>
+      <%= render "shared/add_offer_modal" %>
+    <% end %>
   </body>
 </html>

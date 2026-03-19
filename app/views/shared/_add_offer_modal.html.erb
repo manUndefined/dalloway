@@ -1,0 +1,89 @@
+<div class="modal fade" id="addOfferModal" tabindex="-1" aria-labelledby="addOfferModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content offer-modal-content">
+      <div class="modal-header offer-modal-header">
+        <div class="offer-form-header mb-0">
+          <div class="offer-form-icon">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          <div>
+            <h2 class="offer-form-title" id="addOfferModalLabel">Nouvelle offre</h2>
+            <p class="offer-form-subtitle">Renseignez les détails de l'offre puis lancez un entretien avec l'IA</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%= form_with model: Offer.new, url: offers_path, method: :post, class: "offer-form", data: { controller: "scraper" } do |f| %>
+          <div class="offer-form-grid">
+            <div class="offer-field offer-field-full">
+              <label class="offer-label">
+                <i class="fa-solid fa-link"></i> URL de l'offre
+              </label>
+              <div class="offer-url-wrap">
+                <%= f.text_field :url, placeholder: "https://www.hellowork.com/fr-fr/emplois/...", class: "offer-input", data: { scraper_target: "url", action: "paste->scraper#paste input->scraper#inputChanged" } %>
+                <div class="offer-url-spinner" data-scraper-target="spinner">
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="offer-field">
+              <label class="offer-label">
+                <i class="fa-solid fa-briefcase"></i> Poste
+              </label>
+              <%= f.text_field :title, placeholder: "Développeur Ruby on Rails", class: "offer-input", data: { scraper_target: "title" } %>
+            </div>
+
+            <div class="offer-field">
+              <label class="offer-label">
+                <i class="fa-solid fa-location-dot"></i> Ville
+              </label>
+              <%= f.text_field :city, placeholder: "Paris", class: "offer-input", data: { scraper_target: "city" } %>
+            </div>
+
+            <div class="offer-field">
+              <label class="offer-label">
+                <i class="fa-solid fa-layer-group"></i> Domaine
+              </label>
+              <%= f.text_field :domain, placeholder: "Web development", class: "offer-input", data: { scraper_target: "domain" } %>
+            </div>
+
+            <div class="offer-field">
+              <label class="offer-label">
+                <i class="fa-solid fa-euro-sign"></i> Salaire
+              </label>
+              <%= f.number_field :salary, placeholder: "45000", class: "offer-input", data: { scraper_target: "salary" } %>
+            </div>
+
+            <div class="offer-field">
+              <label class="offer-label">
+                <i class="fa-solid fa-tag"></i> Type de contrat
+              </label>
+              <%= f.select :job_type, options_for_select(["CDI", "CDD", "Freelance", "Stage", "Alternance"]), { include_blank: "Sélectionner..." }, class: "offer-input", data: { scraper_target: "jobType" } %>
+            </div>
+
+            <div class="offer-field">
+              <label class="offer-label">
+                <i class="fa-solid fa-chart-line"></i> Niveau d'expérience
+              </label>
+              <%= f.select :experience_level, options_for_select(["Junior", "Intermédiaire", "Senior"]), { include_blank: "Sélectionner..." }, class: "offer-input", data: { scraper_target: "experienceLevel" } %>
+            </div>
+
+            <div class="offer-field offer-field-full">
+              <label class="offer-label">
+                <i class="fa-solid fa-align-left"></i> Description
+              </label>
+              <%= f.text_area :description, placeholder: "Description du poste...", class: "offer-input offer-textarea", rows: 3, data: { scraper_target: "description" } %>
+            </div>
+          </div>
+
+          <div class="offer-form-actions">
+            <%= f.submit "Ajouter l'offre", class: "offer-btn offer-btn-secondary" %>
+            <%= f.submit "Lancer la session", class: "offer-btn offer-btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
