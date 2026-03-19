@@ -1,8 +1,9 @@
-<div class="container">
+<div class="background-style">
+<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
   <section class="jobs-section">
     <div class="jobs-header">
-      <h2 class="jobs-title">Toutes vos offres</h2>
-      <p class="jobs-subtitle"><%= @offers.size %> offre<%= @offers.size > 1 ? "s" : "" %> sauvegardée<%= @offers.size > 1 ? "s" : "" %></p>
+      <h2 class="jobs-title">Mes offres sauvegardées</h2>
+      <p class="jobs-subtitle"><%= @offers.size %> offre<%= @offers.size > 1 ? "s" : "" %></p>
     </div>
 
     <% if @offers.present? %>
@@ -11,7 +12,7 @@
           <div class="job-card job-card-clickable" onclick="window.location='<%= offer_path(offer) %>'">
             <div class="job-card-top">
               <div class="job-card-icon">
-                <i class="fa-solid fa-briefcase"></i>
+                <i class="fa-solid fa-bookmark"></i>
               </div>
               <h3 class="job-card-title"><%= offer.title %></h3>
               <% if offer.description.present? %>
@@ -35,17 +36,54 @@
                 <% end %>
               </div>
             </div>
+            <div class="job-card-actions">
+              <button type="button" class="job-btn job-btn-delete" data-bs-toggle="modal" data-bs-target="#deleteOfferModal<%= offer.id %>" onclick="event.stopPropagation(); event.preventDefault(); return false;">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
           </div>
         <% end %>
       </div>
     <% else %>
       <div class="jobs-empty">
         <div class="jobs-empty-icon">
-          <i class="fa-solid fa-folder-open"></i>
+          <i class="fa-solid fa-bookmark"></i>
         </div>
         <p>Aucune offre sauvegardée</p>
-        <span>Ajoutez des offres depuis la page d'accueil</span>
+        <span>Importez des offres depuis la page d'accueil pour les retrouver ici</span>
+        <%= link_to root_path, class: "history-empty-btn", style: "margin-top: 16px;" do %>
+          <i class="fa-solid fa-house"></i> Voir les offres
+        <% end %>
       </div>
     <% end %>
   </section>
 </div>
+</div>
+
+<% if @offers.present? %>
+  <% @offers.each do |offer| %>
+    <div class="modal fade" id="deleteOfferModal<%= offer.id %>" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content offer-modal-content">
+          <div class="modal-header offer-modal-header">
+            <h5 class="modal-title">Supprimer l'offre</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <div class="delete-modal-icon">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <p class="delete-modal-text">Supprimer <strong><%= offer.title %></strong> ?</p>
+            <p class="delete-modal-sub">Cette action est irréversible.</p>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="job-btn job-btn-outline" data-bs-dismiss="modal">Annuler</button>
+            <%= button_to offer_path(offer), method: :delete, class: "job-btn job-btn-danger", data: { turbo: false } do %>
+              <i class="fa-solid fa-trash"></i> Supprimer
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

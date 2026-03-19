@@ -20,9 +20,14 @@
         <span class="hero-title-line hero-anim-3"><span class="hero-highlight">plus serein</span></span>
       </h1>
       <p class="hero-desc">Entraînez-vous aux entretiens avec une IA qui s'adapte à votre CV et à l'offre ciblée.</p>
+       <a href="#offres" class="hero-cta hero-cta-secondary mt-4">
+          <i class="fa-solid fa-magnifying-glass"></i> Explorer les offres
+        </a>
     </div>
   </div>
 </section>
+
+<div class="background-style">
 
 <!-- COMMENT CA MARCHE -->
 <section class="how-section-v2">
@@ -63,23 +68,6 @@
   </div>
 </section>
 
-<!-- CTA SECTION -->
-<section class="cta-section">
-  <div class="container">
-    <div class="cta-content">
-      <h2 class="cta-title">Prêt à vous lancer ?</h2>
-      <p class="cta-desc">Ajoutez une offre ou explorez celles disponibles pour commencer votre entraînement.</p>
-      <div class="cta-actions">
-        <button class="hero-cta hero-cta-primary" data-bs-toggle="modal" data-bs-target="#addOfferModal">
-          <i class="fa-solid fa-plus"></i> Ajouter une offre
-        </button>
-        <a href="#offres" class="hero-cta hero-cta-secondary">
-          <i class="fa-solid fa-magnifying-glass"></i> Explorer les offres
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
 
 <div class="container">
   <!-- ADD OFFER MODAL -->
@@ -252,77 +240,5 @@
     <% end %>
   </section>
 
-  <!-- YOUR OFFERS -->
-  <% if @offers.present? %>
-    <section class="jobs-section">
-      <div class="jobs-header">
-        <h2 class="jobs-title">Vos offres sauvegardées</h2>
-        <p class="jobs-subtitle">Offres que vous avez ajoutées manuellement</p>
-      </div>
-
-      <div class="jobs-grid">
-        <% @offers.each do |offer| %>
-          <div class="job-card job-card-clickable" onclick="window.location='<%= offer_path(offer) %>'">
-            <div class="job-card-top">
-              <div class="job-card-icon">
-                <i class="fa-solid fa-bookmark"></i>
-              </div>
-              <h3 class="job-card-title"><%= offer.title %></h3>
-              <p class="job-card-desc"><%= truncate(offer.description, length: 120) %></p>
-              <div class="job-card-tags">
-                <% if offer.city.present? %>
-                  <span class="job-tag"><i class="fa-solid fa-location-dot"></i> <%= offer.city %></span>
-                <% end %>
-                <% if offer.job_type.present? %>
-                  <span class="job-tag"><i class="fa-solid fa-tag"></i> <%= offer.job_type %></span>
-                <% end %>
-                <% if offer.experience_level.present? %>
-                  <span class="job-tag"><i class="fa-solid fa-chart-line"></i> <%= offer.experience_level %></span>
-                <% end %>
-                <% if offer.salary.present? %>
-                  <span class="job-tag"><i class="fa-solid fa-euro-sign"></i> <%= number_to_currency(offer.salary, unit: "€", format: "%n %u", precision: 0) %></span>
-                <% end %>
-              </div>
-            </div>
-            <% if user_signed_in? %>
-              <div class="job-card-actions">
-                <button type="button" class="job-btn job-btn-delete" data-bs-toggle="modal" data-bs-target="#deleteOfferModal<%= offer.id %>" onclick="event.stopPropagation(); event.preventDefault(); return false;">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
-
-      <!-- Modals suppression -->
-      <% if user_signed_in? %>
-        <% @offers.each do |offer| %>
-          <div class="modal fade" id="deleteOfferModal<%= offer.id %>" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-sm">
-              <div class="modal-content offer-modal-content">
-                <div class="modal-header offer-modal-header">
-                  <h5 class="modal-title">Supprimer l'offre</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                  <div class="delete-modal-icon">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                  </div>
-                  <p class="delete-modal-text">Supprimer <strong><%= offer.title %></strong> ?</p>
-                  <p class="delete-modal-sub">Cette action est irréversible.</p>
-                </div>
-                <div class="modal-footer justify-content-center">
-                  <button type="button" class="job-btn job-btn-outline" data-bs-dismiss="modal">Annuler</button>
-                  <%= button_to offer_path(offer), method: :delete, class: "job-btn job-btn-danger", data: { turbo: false } do %>
-                    <i class="fa-solid fa-trash"></i> Supprimer
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      <% end %>
-    </section>
-  <% end %>
+</div>
 </div>
