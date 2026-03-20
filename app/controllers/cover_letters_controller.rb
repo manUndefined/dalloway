@@ -2,25 +2,31 @@ class CoverLettersController < ApplicationController
   def create
     @offer = Offer.find(params[:offer_id])
 
-    cover_letter = CoverLetter.create!(
+    @cover_letter = CoverLetter.create!(
       user: current_user,
       offer: @offer,
       content: "Génération en cours...",
       details: params[:cover_letter][:details]
     )
 
-    GenerateCoverLetterJob.perform_later(cover_letter)
+    GenerateCoverLetterJob.perform_later(@cover_letter)
 
-    redirect_to offer_path(@offer)
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to offer_path(@offer) }
+    end
   end
 
   def update
-    @cover_letter = CoverLetter.find(params[:id])
+    @cover_letter = current_user.cover_letters.find(params[:id])
     @offer = @cover_letter.offer
 
-    @cover_letter.update(cover_letter_params)
+    @cover_letter.update!(cover_letter_params)
 
-    redirect_to offer_path(@offer)
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to offer_path(@offer) }
+    end
   end
 
   private

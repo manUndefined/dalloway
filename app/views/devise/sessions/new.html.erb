@@ -37,7 +37,7 @@
             </label>
           <% end %>
 
-          <%- if devise_mapping.recoverable? %>
+          <% if devise_mapping.recoverable? %>
             <%= link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "auth-forgot" %>
           <% end %>
         </div>

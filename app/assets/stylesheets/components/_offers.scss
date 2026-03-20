@@ -277,7 +277,7 @@ body {
 // ---- SIDEBAR ----
 .offer-show-sidebar {
   position: sticky;
-  top: 80px;
+  top: calc(var(--nav-height) + 16px)
 }
 
 .offer-show-sidebar-title {

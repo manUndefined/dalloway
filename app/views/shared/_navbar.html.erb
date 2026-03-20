@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-dalloway">
-  <div class="container">
+
     <%= link_to root_path, class: "navbar-brand" do %>
       <%= image_tag "dalloway.png", alt: "Dalloway", class: "navbar-logo-img" %>
     <% end %>
@@ -11,20 +11,22 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-center">
         <% if user_signed_in? %>
-          <button class="hero-cta hero-cta-primary mr-3" data-bs-toggle="modal" data-bs-target="#addOfferModal">
-            <i class="fa-solid fa-plus"></i> Ajouter une offre
-          </button>
-          <li class="nav-item">
-            <%= link_to offers_path, class: "nav-link" do %>
-              <i class="fa-solid fa-bookmark"></i> Mes offres
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to chats_path, class: "nav-link" do %>
-              <i class="fa-solid fa-clock-rotate-left"></i> Historique
-            <% end %>
-          </li>
-          <li class="nav-item dropdown">
+          <div class="d-flex gap-2">
+            <button class="hero-cta hero-cta-primary mr-3" data-bs-toggle="modal" data-bs-target="#addOfferModal">
+              <i class="fa-solid fa-plus"></i> Ajouter une offre
+            </button>
+            <li class="nav-item">
+              <%= link_to offers_path, class: "profile-edit-btn" do %>
+                <i class="fa-solid fa-bookmark"></i> Mes offres
+              <% end %>
+            </li>
+            <li class="nav-item">
+              <%= link_to chats_path, class: "profile-edit-btn" do %>
+                <i class="fa-solid fa-clock-rotate-left"></i> Historique
+              <% end %>
+            </li>
+          </div>
+          <li class="m-2 nav-item dropdown">
             <a href="#" class="nav-link nav-avatar-link" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
               <span class="nav-avatar-circle">
                 <%= current_user.first_name&.first&.upcase || "U" %>
@@ -45,6 +47,7 @@
               <% end %>
             </div>
           </li>
+
         <% else %>
           <li class="nav-item">
             <%= link_to new_user_session_path, class: "nav-link" do %>
@@ -59,5 +62,5 @@
         <% end %>
       </ul>
     </div>
-  </div>
+
 </nav>

@@ -1,0 +1,50 @@
+<div id="cover_letter_section">
+  <% user = cover_letter&.user || current_user %>
+
+  <%= turbo_stream_from "cover_letters_#{user.id}_offer_#{offer.id}" %>
+
+  <% if offer.cover_letters.where(user: user).any? %>
+    <% last_cover_letter = offer.cover_letters.where(user: user).last %>
+
+    <%= form_with model: last_cover_letter do |f| %>
+      <div class="offer-show-field">
+        <label class="offer-show-label">Des précisions</label>
+        <%= f.text_area :details, class: "offer-show-textarea", rows: 3 %>
+      </div>
+
+      <%= f.submit "Mettre à jour les précisions", class: "offer-show-btn-primary" %>
+    <% end %>
+
+    <div class="offer-show-regenerate-action">
+      <%= form_with url: offer_cover_letters_path(offer), scope: :cover_letter do |f| %>
+        <%= f.hidden_field :details, value: last_cover_letter.details %>
+        <%= f.submit "Régénérer la lettre", class: "offer-show-btn-secondary" %>
+      <% end %>
+    </div>
+
+    <div id="cover_letter_box">
+      <% if last_cover_letter.content.present? %>
+        <%= render "cover_letters/cover_letter", cover_letter: last_cover_letter %>
+      <% else %>
+        <div class="offer-show-field">
+          <label class="offer-show-label">Lettre générée</label>
+          <div class="offer-show-textarea">
+            Génération en cours...
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <%= form_with url: offer_cover_letters_path(offer), scope: :cover_letter do |f| %>
+      <div class="offer-show-field">
+        <label class="offer-show-label">Des précisions</label>
+        <%= f.text_area :details,
+              class: "offer-show-textarea",
+              rows: 3,
+              placeholder: "Ex : je suis junior en reconversion, je sors du bootcamp Le Wagon, je suis particulièrement motivé par ce poste..." %>
+      </div>
+
+      <%= f.submit "Générer la lettre", class: "offer-show-btn-primary" %>
+    <% end %>
+  <% end %>
+</div>

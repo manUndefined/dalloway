@@ -8,7 +8,7 @@
       <div class="chat-header-info">
         <h1 class="chat-header-title"><%= @chat.title %></h1>
         <p class="chat-header-offer">
-          <i class="fa-solid fa-briefcase"></i> <%= @chat.offer.title %>
+          <%= @chat.offer.title %>
           <% if @chat.offer.city.present? %>
             &bull; <%= @chat.offer.city %>
           <% end %>
@@ -19,6 +19,7 @@
 
     <div class="chat-messages" id="messages" data-chat-target="messages">
       <%= render @chat.messages.order(:created_at) %>
+     
     </div>
     <div class="chat-form-wrapper">
       <%= form_with model: [@chat, @message],

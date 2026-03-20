@@ -157,9 +157,8 @@
   text-decoration: none;
   transition: all 0.25s;
   flex-shrink: 0;
-
   &:hover {
-    background: linear-gradient(135deg, $primary, lighten($primary, 8%));
+    background: $primary;
     color: #fff;
     border-color: transparent;
     box-shadow: 0 4px 14px rgba($primary, 0.3);
