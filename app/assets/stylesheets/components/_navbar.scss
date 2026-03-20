@@ -21,22 +21,19 @@
   padding: 0;
   margin: 0;
   transition: opacity 0.15s;
-
   &:hover {
     opacity: 0.85;
   }
 }
 
 .navbar-logo-img {
-  height: 55px;
+  height: 160px;
   width: auto;
   object-fit: cover;
   object-position: center;
   display: block;
   clip-path: inset(25% 3% 30% 3%);
-  margin: -18px -8px;
-  transform: scale(3);
-  transform-origin: center;
+  margin: -50px -10px;
 }
 
 // Toggler
