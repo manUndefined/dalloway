@@ -6,21 +6,14 @@
   <% if offer.cover_letters.where(user: user).any? %>
     <% last_cover_letter = offer.cover_letters.where(user: user).last %>
 
-    <%= form_with model: last_cover_letter do |f| %>
+    <%= form_with url: regenerate_cover_letter_path(last_cover_letter), method: :post, scope: :cover_letter, class: "mb-4" do |f| %>
       <div class="offer-show-field">
         <label class="offer-show-label">Des précisions</label>
-        <%= f.text_area :details, class: "offer-show-textarea", rows: 3 %>
+        <%= f.text_area :details, value: last_cover_letter.details, class: "offer-show-textarea", rows: 3 %>
       </div>
-
-      <%= f.submit "Mettre à jour les précisions", class: "offer-show-btn-primary" %>
+      <%= f.submit "Regénérer la lettre", class: "offer-show-btn-primary" %>
     <% end %>
 
-    <div class="offer-show-regenerate-action">
-      <%= form_with url: offer_cover_letters_path(offer), scope: :cover_letter do |f| %>
-        <%= f.hidden_field :details, value: last_cover_letter.details %>
-        <%= f.submit "Régénérer la lettre", class: "offer-show-btn-secondary" %>
-      <% end %>
-    </div>
 
     <div id="cover_letter_box">
       <% if last_cover_letter.content.present? %>
@@ -28,13 +21,15 @@
       <% else %>
         <div class="offer-show-field">
           <label class="offer-show-label">Lettre générée</label>
-          <div class="offer-show-textarea">
-            Génération en cours...
+          <div class="offer-show-textarea cover-letter-loading" data-controller="cover-letter-loading">
+            <span data-cover-letter-loading-target="step"></span>
           </div>
         </div>
       <% end %>
     </div>
+    
   <% else %>
+
     <%= form_with url: offer_cover_letters_path(offer), scope: :cover_letter do |f| %>
       <div class="offer-show-field">
         <label class="offer-show-label">Des précisions</label>
