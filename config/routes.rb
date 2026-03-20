@@ -21,7 +21,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :cover_letters, only: [:update]
+  resources :cover_letters, only: [:update] do
+    member do
+      post :regenerate
+    end
+  end
 
 	
   resources :chats, only: [:index, :show, :destroy] do

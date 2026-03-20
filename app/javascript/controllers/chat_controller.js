@@ -8,18 +8,6 @@ export default class extends Controller {
     setTimeout(() => {
       this.scrollToBottom()
     }, 50)
-
-    const textarea = this.formTarget.querySelector("textarea")
-    if (textarea) {
-      textarea.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault()
-          if (textarea.value.trim().length > 0) {
-            this.formTarget.requestSubmit()
-          }
-        }
-      })
-    }
   }
 
   submitting() {
@@ -56,18 +44,12 @@ export default class extends Controller {
   }
 
   appendOptimisticUserMessage(content) {
-    const firstLetter = this.userInitial()
     const html = `
       <div class="chat-bubble chat-bubble-user optimistic-user-message">
         <div class="chat-bubble-content">
-          <div class="chat-bubble-role">Vous</div>
           <div class="chat-bubble-text">
             <p>${this.escapeHtml(content)}</p>
           </div>
-        </div>
-
-        <div class="chat-bubble-avatar">
-          <span>${firstLetter}</span>
         </div>
       </div>
     `
@@ -80,14 +62,13 @@ export default class extends Controller {
 
     const html = `
       <div class="chat-bubble chat-bubble-assistant" id="typing-indicator">
-        <div class="chat-bubble-avatar">
-          <i class="fa-solid fa-robot"></i>
-        </div>
-
         <div class="chat-bubble-content">
-          <div class="chat-bubble-role">Dalloway IA</div>
           <div class="chat-bubble-text">
-            <p>Dalloway écrit...</p>
+            <div class="test-anim">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </div>
         </div>
       </div>
@@ -99,11 +80,6 @@ export default class extends Controller {
   removeTypingIndicator() {
     const indicator = document.getElementById("typing-indicator")
     if (indicator) indicator.remove()
-  }
-
-  userInitial() {
-    const avatar = document.querySelector(".navbar .avatar, .navbar-avatar")
-    return "U"
   }
 
   escapeHtml(text) {

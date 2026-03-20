@@ -16,15 +16,18 @@ class GenerateCoverLetterJob < ApplicationJob
 
       broadcast_response
     rescue StandardError => e
+      Rails.logger.error "GenerateCoverLetterJob FAILED: #{e.class} - #{e.message}"
+      Rails.logger.error e.backtrace.first(10).join("\n")
+
       @cover_letter.update!(
         content: "❌ Une erreur est survenue lors de la génération. Merci de réessayer."
       )
 
       Turbo::StreamsChannel.broadcast_replace_to(
         "cover_letters_#{user.id}_offer_#{offer.id}",
-        target: "cover_letter_box",
-        partial: "cover_letters/cover_letter",
-        locals: { cover_letter: @cover_letter }
+        target: "cover_letter_section",
+        partial: "cover_letters/section",
+        locals: { offer: offer, cover_letter: @cover_letter }
       )
     end
   end
@@ -79,7 +82,7 @@ class GenerateCoverLetterJob < ApplicationJob
       - évite le style trop scolaire, trop institutionnel ou trop parfait
       - privilégie des phrases plutôt courtes et percutantes
       - adapte clairement la lettre au poste visé
-      - valorise uniquement les expériences, compétences et technologies réellement présentes dans le CV ou les précisions utilisateur
+      - valorise uniquement les expériences, compétences et technologies réellement présentes dans le CV ou les précisions
       - n'invente jamais une expérience inexistante
       - n'invente pas d'entreprise précédente, de résultat chiffré ou de mission non mentionnée
       - n'évoque jamais le salaire dans la lettre
@@ -91,9 +94,7 @@ class GenerateCoverLetterJob < ApplicationJob
         - un paragraphe sur le parcours / les compétences
         - un paragraphe sur l'intérêt pour le poste / l'entreprise
         - une conclusion simple et professionnelle
-
       - ne mets ni objet, ni adresse postale, ni date
-
       - la lettre doit ressembler à une vraie lettre de motivation lisible sur une page web
       - fais des paragraphes bien séparés
       - respecte impérativement une fin de lettre propre et aérée
@@ -104,8 +105,7 @@ class GenerateCoverLetterJob < ApplicationJob
         - une ligne vide
         - le prénom et le nom du candidat sur une ligne dédiée
         - la ville sur une dernière ligne si elle est connue
-
-      - n’écris pas toute la fin sur une seule ligne
+      - n'écris pas toute la fin sur une seule ligne
       - ne colle pas la formule de politesse au dernier paragraphe
 
       CONTEXTE :
@@ -132,9 +132,9 @@ class GenerateCoverLetterJob < ApplicationJob
     puts "broadcast_response"
     Turbo::StreamsChannel.broadcast_replace_to(
       "cover_letters_#{user.id}_offer_#{offer.id}",
-      target: "cover_letter_box",
-      partial: "cover_letters/cover_letter",
-      locals: { cover_letter: @cover_letter }
+      target: "cover_letter_section",
+      partial: "cover_letters/section",
+      locals: { offer: offer, cover_letter: @cover_letter }
     )
   end
 end

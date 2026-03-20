@@ -72,52 +72,8 @@
           <i class="fa-solid fa-envelope-open-text"></i> Lettre de motivation
         </h2>
 
-        <%= turbo_stream_from "cover_letters_#{current_user.id}_offer_#{@offer.id}" %>
-
-        <% if @offer.cover_letters.where(user: current_user).any? %>
-          <% last_cover_letter = @offer.cover_letters.where(user: current_user).last %>
-
-          <%= form_with model: last_cover_letter, local: true do |f| %>
-            <div class="offer-show-field">
-              <label class="offer-show-label">Des précisions</label>
-              <%= f.text_area :details, class: "offer-show-textarea", rows: 3 %>
-            </div>
-
-            <%= f.submit "Mettre à jour les précisions", class: "offer-show-btn-primary" %>
-          <% end %>
-
-          <div class="offer-show-regenerate-action">
-            <%= form_with model: [@offer, @cover_letter], local: true do |f| %>
-              <%= f.hidden_field :details, value: last_cover_letter.details %>
-              <%= f.submit "Régénérer la lettre", class: "offer-show-btn-secondary" %>
-            <% end %>
-          </div>
-
-          <div id="cover_letter_box">
-            <% if last_cover_letter.content.present? %>
-              <%= render "cover_letters/cover_letter", cover_letter: last_cover_letter %>
-            <% else %>
-              <div class="offer-show-field">
-                <label class="offer-show-label">Lettre générée</label>
-                <div class="offer-show-textarea">
-                  Génération en cours...
-                </div>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <%= form_with model: [@offer, @cover_letter], local: true do |f| %>
-            <div class="offer-show-field">
-              <label class="offer-show-label">Des précisions</label>
-              <%= f.text_area :details,
-                    class: "offer-show-textarea",
-                    rows: 3,
-                    placeholder: "Ex : je suis junior en reconversion, je sors du bootcamp Le Wagon, je suis particulièrement motivé par ce poste..." %>
-            </div>
-
-            <%= f.submit "Générer la lettre", class: "offer-show-btn-primary" %>
-          <% end %>
-        <% end %>
+      <%= render "cover_letters/section", offer: @offer, cover_letter: @cover_letter %>
+        
       </div>
     </div>
 
@@ -170,16 +126,14 @@
             <strong><%= @offer.domain %></strong>
           </div>
         <% end %>
-      </div>
-
-      <% if @offer.url.present? %>
-        <div class="offer-show-card offer-show-card-cta">
-          <p class="offer-show-cta-text">Cette offre vous intéresse ?</p>
-          <a href="<%= @offer.url %>" target="_blank" class="offer-show-btn-primary offer-show-btn-block">
+        <% if @offer.url.present? %>  
+         <a href="<%= @offer.url %>" target="_blank" class="offer-show-btn-primary offer-show-btn-block mt-2">
             <i class="fa-solid fa-external-link"></i> Postuler
           </a>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
+
+      
     </aside>
   </div>
 </div>

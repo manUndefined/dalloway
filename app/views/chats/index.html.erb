@@ -17,11 +17,10 @@
                   <i class="fa-solid fa-comments"></i>
                 </div>
                 <div class="history-card-info">
-                  <h3 class="history-card-title"><%= chat.title %></h3>
+                  <h3 class="history-card-title"><%= chat.offer.title %></h3>
                   <p class="history-card-offer">
-                    <i class="fa-solid fa-briefcase"></i> <%= chat.offer.title %>
                     <% if chat.offer.city.present? %>
-                      <span class="history-card-sep">&bull;</span> <%= chat.offer.city %>
+                      <%= chat.offer.city %>
                     <% end %>
                   </p>
                   <div class="history-card-meta">
@@ -38,9 +37,6 @@
                 <span class="history-card-arrow"><i class="fa-solid fa-chevron-right"></i></span>
               </div>
             <% end %>
-            <button type="button" class="history-delete-btn" data-bs-toggle="modal" data-bs-target="#deleteChatModal<%= chat.id %>">
-              <i class="fa-solid fa-trash"></i>
-            </button>
           </div>
         <% end %>
       </div>

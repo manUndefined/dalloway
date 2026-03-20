@@ -277,7 +277,7 @@ body {
 // ---- SIDEBAR ----
 .offer-show-sidebar {
   position: sticky;
-  top: 80px;
+  top: calc(var(--nav-height) + 16px)
 }
 
 .offer-show-sidebar-title {
@@ -391,7 +391,7 @@ body {
 
 // ---- FORM FIELDS ----
 .offer-show-field {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .offer-show-label {
@@ -475,4 +475,109 @@ body {
   .offer-show-card {
     padding: 20px;
   }
+}
+
+// ---- COVER LETTER LOADING ----
+@keyframes cl-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes cl-pop-in {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.cover-letter-loading {
+  padding: 8px 0;
+}
+
+.cl-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cl-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: opacity 0.4s ease;
+}
+
+.cl-step-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease, color 0.3s ease;
+
+  svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+.cl-step-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+// Pending
+.cl-step--pending {
+  opacity: 0.35;
+
+  .cl-step-icon {
+    background: #e2e8f0;
+    color: transparent;
+  }
+
+  .cl-step-label {
+    color: #94a3b8;
+  }
+}
+
+// Active
+.cl-step--active {
+  animation: cl-pop-in 0.35s ease forwards;
+
+  .cl-step-icon {
+    background: rgba($blue, 0.12);
+    color: $blue;
+  }
+
+  .cl-step-label {
+    color: #0f172a;
+  }
+}
+
+// Done
+.cl-step--done {
+  .cl-step-icon {
+    background: rgba($green, 0.15);
+    color: $green;
+  }
+
+  .cl-step-label {
+    color: #64748b;
+    text-decoration: line-through;
+    text-decoration-color: rgba($green, 0.4);
+  }
+}
+
+// Spinner
+.cl-spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba($blue, 0.25);
+  border-top-color: $blue;
+  border-radius: 50%;
+  display: block;
+  animation: cl-spin 0.75s linear infinite;
 }

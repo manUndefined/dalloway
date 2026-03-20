@@ -78,13 +78,13 @@
         <% if user_signed_in? && (current_user.preferred_sector.present? || current_user.preferred_city.present?) %>
           Offres HelloWork filtrées selon vos préférences
         <% else %>
-          Dernières offres disponibles sur HelloWork
+          Dernières offres disponibles
         <% end %>
       </p>
     </div>
 
     <!-- SEARCH BAR -->
-    <%= form_with url: root_path, method: :get, class: "search-bar" do |f| %>
+    <%= form_with url: root_path, method: :get, class: "search-bar", data: { turbo_frame: "hellowork_offers" } do |f| %>
       <div class="search-fields">
         <div class="search-field">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -102,50 +102,55 @@
       <%= f.submit "Rechercher", class: "search-btn" %>
     <% end %>
 
-    <% if @hellowork_offers.present? %>
-      <div class="jobs-grid">
-        <% @hellowork_offers.each do |hw| %>
-          <%= button_to import_offers_path, method: :post, params: { url: hw[:url], title: hw[:title], city: hw[:city], domain: hw[:domain], job_type: hw[:job_type] }, class: "job-card job-card-clickable" do %>
-            <div class="job-card-top">
-              <div class="job-card-icon">
-                <i class="fa-solid fa-briefcase"></i>
+    <%= turbo_frame_tag "hellowork_offers" do %>
+      <% if @hellowork_offers.present? %>
+        <div class="jobs-grid">
+          <% @hellowork_offers.each do |hw| %>
+            <%= button_to import_offers_path, method: :post, params: { url: hw[:url], title: hw[:title], city: hw[:city], domain: hw[:domain], job_type: hw[:job_type] }, class: "job-card job-card-clickable" do %>
+              <div class="job-card-top">
+                <div class="job-card-icon">
+                  <i class="fa-solid fa-briefcase"></i>
+                </div>
+                <h3 class="job-card-title"><%= hw[:title] %></h3>
+                <% if hw[:company].present? %>
+                  <p class="job-card-company"><i class="fa-solid fa-building"></i> <%= hw[:company] %></p>
+                <% end %>
+                <div class="job-card-tags">
+                  <% if hw[:city].present? %>
+                    <span class="job-tag"><i class="fa-solid fa-location-dot"></i> <%= hw[:city] %></span>
+                  <% end %>
+                  <% if hw[:job_type].present? %>
+                    <span class="job-tag"><i class="fa-solid fa-tag"></i> <%= hw[:job_type] %></span>
+                  <% end %>
+                  <% if hw[:salary].present? %>
+                    <span class="job-tag"><i class="fa-solid fa-euro-sign"></i> <%= hw[:salary] %></span>
+                  <% end %>
+                  <% if hw[:remote].present? %>
+                    <span class="job-tag"><i class="fa-solid fa-house-laptop"></i> <%= hw[:remote] %></span>
+                  <% end %>
+                  <% if hw[:domain].present? %>
+                    <span class="job-tag"><i class="fa-solid fa-layer-group"></i> <%= hw[:domain] %></span>
+                  <% end %>
+                </div>
+                <% if hw[:posted_at].present? %>
+                  <p class="job-card-date"><i class="fa-regular fa-clock"></i> <%= hw[:posted_at] %></p>
+                <% end %>
               </div>
-              <h3 class="job-card-title"><%= hw[:title] %></h3>
-              <% if hw[:company].present? %>
-                <p class="job-card-company"><i class="fa-solid fa-building"></i> <%= hw[:company] %></p>
-              <% end %>
-              <div class="job-card-tags">
-                <% if hw[:city].present? %>
-                  <span class="job-tag"><i class="fa-solid fa-location-dot"></i> <%= hw[:city] %></span>
-                <% end %>
-                <% if hw[:job_type].present? %>
-                  <span class="job-tag"><i class="fa-solid fa-tag"></i> <%= hw[:job_type] %></span>
-                <% end %>
-                <% if hw[:salary].present? %>
-                  <span class="job-tag"><i class="fa-solid fa-euro-sign"></i> <%= hw[:salary] %></span>
-                <% end %>
-                <% if hw[:remote].present? %>
-                  <span class="job-tag"><i class="fa-solid fa-house-laptop"></i> <%= hw[:remote] %></span>
-                <% end %>
-                <% if hw[:domain].present? %>
-                  <span class="job-tag"><i class="fa-solid fa-layer-group"></i> <%= hw[:domain] %></span>
-                <% end %>
-              </div>
-              <% if hw[:posted_at].present? %>
-                <p class="job-card-date"><i class="fa-regular fa-clock"></i> <%= hw[:posted_at] %></p>
-              <% end %>
-            </div>
+            <% end %>
           <% end %>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="jobs-empty">
-        <div class="jobs-empty-icon">
-          <i class="fa-solid fa-filter-circle-xmark"></i>
         </div>
-        <p>Aucune offre ne correspond à vos critères.</p>
-        <span>Essayez avec d'autres filtres ou <%= link_to "réinitialisez la recherche", root_path %>.</span>
-      </div>
+      <% else %>
+        <div class="jobs-empty">
+          <div class="jobs-empty-icon">
+            <i class="fa-solid fa-filter-circle-xmark"></i>
+          </div>
+          <p class="jobs-empty-title">Aucun résultat trouvé</p>
+          <p class="jobs-empty-sub">Aucune offre ne correspond à vos critères de recherche.<br>Essayez d'autres mots-clés ou une ville différente.</p>
+          <%= link_to root_path, class: "jobs-empty-reset", data: { turbo_frame: "hellowork_offers" } do %>
+            <i class="fa-solid fa-rotate-left"></i> Réinitialiser la recherche
+          <% end %>
+        </div>
+      <% end %>
     <% end %>
   </section>
 
